@@ -5,254 +5,44 @@
 <title>South Width | Streetwear</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- FUENTE -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-/* ================= RESET ================= */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif}
+html{scroll-behavior:smooth}
+body{background:#0f0f0f;color:#fff}
+
+/* NAV */
+header{position:fixed;width:100%;top:0;z-index:100;background:rgba(15,15,15,.9)}
+.nav{max-width:1200px;margin:auto;padding:20px;display:flex;justify-content:space-between;align-items:center}
+.logo img{height:40px}
+.menu a{margin-left:30px;text-decoration:none;color:#fff;font-size:14px}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;max-width:1200px;margin:auto;padding:120px 20px;gap:40px}
+.hero h1{font-size:60px;font-weight:800}
+.hero span{opacity:.3}
+.hero p{margin:30px 0;opacity:.7}
+.btn{padding:15px 30px;border:1px solid #fff;color:#fff;text-decoration:none}
+
+/* SECCIONES */
+.section{max-width:1200px;margin:auto;padding:120px 20px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px}
+
+.card{
+    padding:60px 20px;
+    border:1px solid #333;
+    text-decoration:none;
+    color:#fff;
+    font-size:18px;
+    transition:.4s;
 }
+.card:hover{background:#fff;color:#000}
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    background: #0f0f0f;
-    color: #fff;
-}
-
-/* ================= NAVBAR ================= */
-header {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 100;
-    background: rgba(15,15,15,0.8);
-    backdrop-filter: blur(10px);
-    transition: 0.3s;
-}
-
-header.scrolled {
-    background: rgba(0,0,0,0.95);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-.nav {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo img {
-    height: 40px;
-}
-
-.menu a {
-    margin-left: 30px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.menu a:hover {
-    opacity: 0.6;
-}
-
-/* ================= HERO ================= */
-.hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    max-width: 1200px;
-    margin: auto;
-    padding: 120px 20px;
-    gap: 40px;
-}
-
-.hero-text h1 {
-    font-size: 60px;
-    font-weight: 800;
-    line-height: 1.1;
-}
-
-.hero-text h1 span {
-    opacity: 0.3;
-}
-
-.hero-text p {
-    margin: 30px 0;
-    font-size: 16px;
-    max-width: 500px;
-    opacity: 0.8;
-}
-
-.buttons {
-    display: flex;
-    gap: 20px;
-}
-
-.btn {
-    padding: 15px 30px;
-    border: 1px solid #fff;
-    text-decoration: none;
-    color: #fff;
-    font-size: 14px;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-    transition: 0.3s;
-}
-
-.btn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.15);
-    transition: 0.4s;
-}
-
-.btn:hover::after {
-    left: 0;
-}
-
-.btn:hover {
-    background: #fff;
-    color: #000;
-}
-
-.btn.alt {
-    border: 1px solid #444;
-}
-
-/* ================= IMAGEN ================= */
-.hero-img {
-    position: relative;
-}
-
-.hero-img img {
-    width: 100%;
-    border-radius: 20px;
-    filter: grayscale(100%);
-    transition: 0.6s;
-}
-
-.hero-img img:hover {
-    filter: grayscale(0%);
-    transform: scale(1.05);
-}
-
-/* ================= SECCIONES ================= */
-.section {
-    max-width: 1200px;
-    margin: auto;
-    padding: 120px 20px;
-    text-align: center;
-}
-
-.section h2 {
-    font-size: 40px;
-    margin-bottom: 20px;
-}
-
-.section p {
-    opacity: 0.7;
-    margin-bottom: 60px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-}
-
-.card {
-    padding: 60px 20px;
-    border: 1px solid #333;
-    transition: 0.4s;
-}
-
-.card:hover {
-    background: #fff;
-    color: #000;
-    transform: translateY(-10px);
-}
-
-/* ================= CONTACTO ================= */
-.contact-form {
-    max-width: 500px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.contact-form input,
-.contact-form textarea {
-    padding: 15px;
-    background: #111;
-    border: 1px solid #333;
-    color: #fff;
-}
-
-.contact-form textarea {
-    min-height: 120px;
-}
-
-/* ================= ANIMACIONES ================= */
-.fade-up {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: 0.8s;
-}
-
-.fade-left {
-    opacity: 0;
-    transform: translateX(-50px);
-    transition: 0.8s;
-}
-
-.fade-right {
-    opacity: 0;
-    transform: translateX(50px);
-    transition: 0.8s;
-}
-
-.show {
-    opacity: 1;
-    transform: translate(0);
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 900px) {
-    .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .hero-text h1 {
-        font-size: 45px;
-    }
-
-    .buttons {
-        justify-content: center;
-    }
-
-    .menu {
-        display: none;
-    }
+/* RESPONSIVE */
+@media(max-width:900px){
+.hero{grid-template-columns:1fr;text-align:center}
+.menu{display:none}
 }
 </style>
 </head>
@@ -260,96 +50,42 @@ header.scrolled {
 <body>
 
 <header>
-    <div class="nav">
-        <div class="logo">
-            <!-- CAMBIA LA IMAGEN -->
-            <img src="img/logo.png" alt="South Width">
-        </div>
-        <nav class="menu">
-            <a href="#inicio">Inicio</a>
-            <a href="#ropa">Ropa</a>
-            <a href="#accesorios">Accesorios</a>
-            <a href="#colecciones">Colecciones</a>
-            <a href="#contacto">Contacto</a>
-        </nav>
-    </div>
+<div class="nav">
+    <div class="logo"><img src="img/logo.png"></div>
+    <nav class="menu">
+        <a href="#inicio">Inicio</a>
+        <a href="#ropa">Ropa</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
+</div>
 </header>
 
 <section id="inicio" class="hero">
-    <div class="hero-text fade-left">
-        <h1>STREETWEAR<br><span>DESDE EL SUR</span></h1>
-        <p>South Width nace en el sur de Chile. Diseño urbano, identidad real y estilo sin exceso.</p>
-        <div class="buttons fade-up">
-            <a href="#ropa" class="btn">VER COLECCIÓN</a>
-            <a href="#colecciones" class="btn alt">DROPS</a>
-        </div>
-    </div>
-
-    <div class="hero-img fade-right">
-        <img src="https://images.unsplash.com/photo-1520975867597-0af37a22e31a" alt="Streetwear">
-    </div>
+<div>
+    <h1>STREETWEAR<br><span>DESDE EL SUR</span></h1>
+    <p>Marca urbana inspirada en el sur de Chile.</p>
+    <a href="#ropa" class="btn">VER ROPA</a>
+</div>
+<div>
+    <img src="https://images.unsplash.com/photo-1520975867597-0af37a22e31a" style="width:100%;border-radius:20px">
+</div>
 </section>
 
-<section id="ropa" class="section fade-up">
-    <h2>Ropa</h2>
-    <p>Prendas pensadas para el día a día.</p>
-    <div class="grid">
-        <div class="card">Poleras</div>
-        <div class="card">Polerones</div>
-        <div class="card">Pantalones</div>
-    </div>
+<section id="ropa" class="section">
+<h2>Ropa</h2>
+<p>Prendas pensadas para el día a día.</p>
+
+<div class="grid">
+    <a href="poleras.html" class="card">Poleras</a>
+    <a href="polerones.html" class="card">Polerones</a>
+    <a href="pantalones.html" class="card">Pantalones</a>
+</div>
 </section>
 
-<section id="accesorios" class="section fade-up">
-    <h2>Accesorios</h2>
-    <p>Complementos urbanos.</p>
-    <div class="grid">
-        <div class="card">Gorros</div>
-        <div class="card">Bolsos</div>
-        <div class="card">Cinturones</div>
-    </div>
+<section id="contacto" class="section">
+<h2>Contacto</h2>
+<p>Escríbenos a contacto@southwidth.cl</p>
 </section>
-
-<section id="colecciones" class="section fade-up">
-    <h2>Colecciones</h2>
-    <p>Lanzamientos exclusivos.</p>
-    <div class="grid">
-        <div class="card">DROP SUR</div>
-        <div class="card">WINTER CORE</div>
-        <div class="card">ESSENTIALS</div>
-    </div>
-</section>
-
-<section id="contacto" class="section fade-up">
-    <h2>Contacto</h2>
-    <p>Conversemos.</p>
-    <form class="contact-form">
-        <input type="text" placeholder="Nombre" required>
-        <input type="email" placeholder="Correo" required>
-        <textarea placeholder="Mensaje"></textarea>
-        <button class="btn">Enviar</button>
-    </form>
-</section>
-
-<script>
-/* ANIMACIONES SCROLL */
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-        }
-    });
-}, { threshold: 0.15 });
-
-document.querySelectorAll('.fade-up, .fade-left, .fade-right')
-.forEach(el => observer.observe(el));
-
-/* NAVBAR SCROLL */
-const header = document.querySelector("header");
-window.addEventListener("scroll", () => {
-    header.classList.toggle("scrolled", window.scrollY > 80);
-});
-</script>
 
 </body>
 </html>
