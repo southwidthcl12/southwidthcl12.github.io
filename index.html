@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>South Width | Streetwear</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FUENTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #0f0f0f;
+            color: #fff;
+        }
+
+        /* NAVBAR */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background: rgba(15,15,15,0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .menu a {
+            margin-left: 30px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            opacity: 0.6;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            max-width: 1200px;
+            margin: auto;
+            padding: 120px 20px 40px;
+            gap: 40px;
+        }
+
+        .hero-text h1 {
+            font-size: 60px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .hero-text h1 span {
+            opacity: 0.3;
+        }
+
+        .hero-text p {
+            margin: 30px 0;
+            font-size: 16px;
+            max-width: 500px;
+            opacity: 0.8;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: 1px solid #fff;
+            text-decoration: none;
+            color: #fff;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn.alt {
+            border: 1px solid #555;
+            opacity: 0.8;
+        }
+
+        /* IMAGEN HERO */
+        .hero-img {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-img img {
+            width: 100%;
+            border-radius: 20px;
+            filter: grayscale(100%);
+            transition: 0.6s;
+        }
+
+        .hero-img img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 45px;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="nav">
+        <div class="logo">SOUTH WIDTH</div>
+        <nav class="menu">
+            <a href="#">Inicio</a>
+            <a href="#">Ropa</a>
+            <a href="#">Accesorios</a>
+            <a href="#">Colecciones</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>
+            STREETWEAR<br>
+            <span>DESDE EL SUR</span>
+        </h1>
+
+        <p>
+            South Width nace en el sur de Chile, inspirada en la calle,
+            el frío y la identidad. Diseños limpios, reales y sin exceso.
+        </p>
+
+        <div class="buttons">
+            <a href="#" class="btn">VER COLECCIÓN</a>
+            <a href="#" class="btn alt">NUEVOS LANZAMIENTOS</a>
+        </div>
+    </div>
+
+    <div class="hero-img">
+        <!-- CAMBIA ESTA IMAGEN POR UNA TUYA -->
+        <img src="https://images.unsplash.com/photo-1520975867597-0af37a22e31a" alt="Streetwear">
+    </div>
+</section>
+
+</body>
+</html>
