@@ -70,7 +70,6 @@ main{
   cursor:pointer;
   transition:.2s
 }
-.card button:hover{transform:translateY(-2px)}
 .card button:active{transform:scale(.95)}
 
 /* CARRITO */
@@ -81,9 +80,16 @@ main{
   padding:12px 20px;
   cursor:pointer;
   z-index:200;
+  position:fixed
 }
-#cartBtn.pulse{animation:pulse .3s}
-@keyframes pulse{50%{transform:scale(1.15)}}
+#cartBtn span{
+  background:red;
+  color:#fff;
+  border-radius:50%;
+  padding:2px 6px;
+  font-size:12px;
+  margin-left:6px
+}
 
 #cart{
   position:fixed;
@@ -98,47 +104,18 @@ main{
 }
 #cart.active{right:0}
 
-.cart-item{
-  opacity:0;
-  animation:fade .3s forwards;
-  margin-bottom:12px;
-  font-size:14px
-}
-@keyframes fade{to{opacity:1}}
-
+.cart-item{margin-bottom:12px;font-size:14px}
 .cart-controls{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:6px
+  display:flex;gap:8px;margin-top:6px
 }
 .cart-controls button{
-  background:#333;
-  border:none;
-  color:#fff;
   width:22px;height:22px;
-  cursor:pointer
+  background:#333;border:none;color:#fff;cursor:pointer
 }
-.cart-controls span{min-width:20px;text-align:center}
-
 .cart-remove{
-  color:#ff5f5f;
-  cursor:pointer;
-  font-size:12px;
-  margin-left:auto
+  color:#ff5f5f;font-size:12px;cursor:pointer;margin-left:auto
 }
-
-.total{
-  margin-top:20px;
-  font-weight:700;
-  font-size:16px
-}
-
-/* CONTACTO */
-#contacto{
-  padding:120px 60px;
-  color:#aaa
-}
+.total{margin-top:20px;font-weight:700}
 </style>
 </head>
 
@@ -185,12 +162,6 @@ main{
   </div>
 </section>
 
-<section id="contacto">
-  <h2>Contacto</h2>
-  <p>📍 Sur de Chile</p>
-  <p>📧 contacto@southwidth.cl</p>
-</section>
-
 <!-- CARRITO -->
 <div id="cart">
   <h3>Carrito</h3>
@@ -198,12 +169,13 @@ main{
   <div class="total" id="cartTotal">Total: $0</div>
 </div>
 
-<div id="cartBtn" onclick="toggleCart()">🛒 Carrito</div>
+<div id="cartBtn" onclick="toggleCart()">🛒 <span id="cartCount">0</span></div>
 
-<!-- FIREBASE AUTH -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore,doc,setDoc,getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAVyVlXFJuVF3snNO3fvQy1ud1WGo15ri4",
@@ -216,17 +188,27 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let cart = [];
 
 const loginLink=document.getElementById("loginLink");
 const logoutLink=document.getElementById("logoutLink");
 const userName=document.getElementById("userName");
 
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth, async user=>{
   if(user){
+    currentUser = user;
     loginLink.style.display="none";
     logoutLink.style.display="inline-block";
     userName.textContent="Hola, "+(user.displayName||"Usuario");
+    await loadCart();
+    renderCart();
   }else{
+    currentUser=null;
+    cart=[];
+    renderCart();
     loginLink.style.display="inline-block";
     logoutLink.style.display="none";
     userName.textContent="";
@@ -237,66 +219,68 @@ logoutLink.onclick=e=>{
   e.preventDefault();
   signOut(auth).then(()=>location.reload());
 };
-</script>
 
-<!-- CARRITO JS -->
-<script>
-let cart=[];
-
-function addToCart(name,price){
-  const item=cart.find(p=>p.name===name);
-  if(item){item.qty++}
-  else{cart.push({name,price,qty:1})}
-  renderCart();
-  animateCart();
+async function loadCart(){
+  const ref = doc(db,"carts",currentUser.uid);
+  const snap = await getDoc(ref);
+  if(snap.exists()) cart = snap.data().items || [];
 }
 
+async function saveCart(){
+  if(!currentUser) return;
+  await setDoc(doc(db,"carts",currentUser.uid),{items:cart});
+}
+
+window.addToCart = async (name,price)=>{
+  const item = cart.find(p=>p.name===name);
+  if(item) item.qty++;
+  else cart.push({name,price,qty:1});
+  await saveCart();
+  renderCart();
+};
+
 function renderCart(){
-  const container=document.getElementById("cartItems");
-  container.innerHTML="";
-  let total=0;
+  const cont=document.getElementById("cartItems");
+  cont.innerHTML="";
+  let total=0, count=0;
 
   cart.forEach((p,i)=>{
     total+=p.price*p.qty;
-    const div=document.createElement("div");
-    div.className="cart-item";
-    div.innerHTML=`
-      <strong>${p.name}</strong><br>
-      $${p.price} c/u
-      <div class="cart-controls">
-        <button onclick="changeQty(${i},-1)">-</button>
-        <span>${p.qty}</span>
-        <button onclick="changeQty(${i},1)">+</button>
-        <span class="cart-remove" onclick="removeItem(${i})">Eliminar</span>
+    count+=p.qty;
+    cont.innerHTML+=`
+      <div class="cart-item">
+        <strong>${p.name}</strong><br>$${p.price}
+        <div class="cart-controls">
+          <button onclick="changeQty(${i},-1)">-</button>
+          <span>${p.qty}</span>
+          <button onclick="changeQty(${i},1)">+</button>
+          <span class="cart-remove" onclick="removeItem(${i})">Eliminar</span>
+        </div>
       </div>
     `;
-    container.appendChild(div);
   });
 
-  document.getElementById("cartTotal").textContent=
+  document.getElementById("cartTotal").textContent =
     "Total: $" + total.toLocaleString("es-CL");
+  document.getElementById("cartCount").textContent = count;
 }
 
-function changeQty(i,val){
+window.changeQty = async (i,val)=>{
   cart[i].qty+=val;
   if(cart[i].qty<=0) cart.splice(i,1);
+  await saveCart();
   renderCart();
-}
+};
 
-function removeItem(i){
+window.removeItem = async (i)=>{
   cart.splice(i,1);
+  await saveCart();
   renderCart();
-}
+};
 
-function toggleCart(){
+window.toggleCart = ()=>{
   document.getElementById("cart").classList.toggle("active");
-}
-
-function animateCart(){
-  const btn=document.getElementById("cartBtn");
-  btn.classList.add("pulse");
-  setTimeout(()=>btn.classList.remove("pulse"),300);
-}
+};
 </script>
 
 </body>
