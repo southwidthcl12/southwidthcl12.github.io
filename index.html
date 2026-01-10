@@ -1,191 +1,355 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>South Width | Streetwear</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>South Width | Streetwear</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- FUENTES -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+<!-- FUENTE -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
+<style>
+/* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
 
-        body {
-            background: #0f0f0f;
-            color: #fff;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        /* NAVBAR */
-        header {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            background: rgba(15,15,15,0.8);
-            backdrop-filter: blur(10px);
-        }
+body {
+    background: #0f0f0f;
+    color: #fff;
+}
 
-        .nav {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+/* ================= NAVBAR ================= */
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,15,15,0.8);
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
 
-        .logo {
-            font-weight: 800;
-            font-size: 24px;
-            letter-spacing: 2px;
-        }
+header.scrolled {
+    background: rgba(0,0,0,0.95);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
 
-        .menu a {
-            margin-left: 30px;
-            text-decoration: none;
-            color: #fff;
-            font-size: 14px;
-            transition: 0.3s;
-        }
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .menu a:hover {
-            opacity: 0.6;
-        }
+.logo img {
+    height: 40px;
+}
 
-        /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            max-width: 1200px;
-            margin: auto;
-            padding: 120px 20px 40px;
-            gap: 40px;
-        }
+.menu a {
+    margin-left: 30px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    transition: 0.3s;
+}
 
-        .hero-text h1 {
-            font-size: 60px;
-            font-weight: 800;
-            line-height: 1.1;
-        }
+.menu a:hover {
+    opacity: 0.6;
+}
 
-        .hero-text h1 span {
-            opacity: 0.3;
-        }
+/* ================= HERO ================= */
+.hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 120px 20px;
+    gap: 40px;
+}
 
-        .hero-text p {
-            margin: 30px 0;
-            font-size: 16px;
-            max-width: 500px;
-            opacity: 0.8;
-        }
+.hero-text h1 {
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1.1;
+}
 
-        .buttons {
-            display: flex;
-            gap: 20px;
-        }
+.hero-text h1 span {
+    opacity: 0.3;
+}
 
-        .btn {
-            padding: 15px 30px;
-            border: 1px solid #fff;
-            text-decoration: none;
-            color: #fff;
-            font-size: 14px;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
+.hero-text p {
+    margin: 30px 0;
+    font-size: 16px;
+    max-width: 500px;
+    opacity: 0.8;
+}
 
-        .btn:hover {
-            background: #fff;
-            color: #000;
-        }
+.buttons {
+    display: flex;
+    gap: 20px;
+}
 
-        .btn.alt {
-            border: 1px solid #555;
-            opacity: 0.8;
-        }
+.btn {
+    padding: 15px 30px;
+    border: 1px solid #fff;
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: 0.3s;
+}
 
-        /* IMAGEN HERO */
-        .hero-img {
-            position: relative;
-            overflow: hidden;
-        }
+.btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.15);
+    transition: 0.4s;
+}
 
-        .hero-img img {
-            width: 100%;
-            border-radius: 20px;
-            filter: grayscale(100%);
-            transition: 0.6s;
-        }
+.btn:hover::after {
+    left: 0;
+}
 
-        .hero-img img:hover {
-            filter: grayscale(0%);
-            transform: scale(1.05);
-        }
+.btn:hover {
+    background: #fff;
+    color: #000;
+}
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
+.btn.alt {
+    border: 1px solid #444;
+}
 
-            .hero-text h1 {
-                font-size: 45px;
-            }
+/* ================= IMAGEN ================= */
+.hero-img {
+    position: relative;
+}
 
-            .buttons {
-                justify-content: center;
-            }
-        }
-    </style>
+.hero-img img {
+    width: 100%;
+    border-radius: 20px;
+    filter: grayscale(100%);
+    transition: 0.6s;
+}
+
+.hero-img img:hover {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+/* ================= SECCIONES ================= */
+.section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 120px 20px;
+    text-align: center;
+}
+
+.section h2 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.section p {
+    opacity: 0.7;
+    margin-bottom: 60px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    padding: 60px 20px;
+    border: 1px solid #333;
+    transition: 0.4s;
+}
+
+.card:hover {
+    background: #fff;
+    color: #000;
+    transform: translateY(-10px);
+}
+
+/* ================= CONTACTO ================= */
+.contact-form {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 15px;
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+}
+
+.contact-form textarea {
+    min-height: 120px;
+}
+
+/* ================= ANIMACIONES ================= */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: 0.8s;
+}
+
+.fade-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: 0.8s;
+}
+
+.fade-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: 0.8s;
+}
+
+.show {
+    opacity: 1;
+    transform: translate(0);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .hero-text h1 {
+        font-size: 45px;
+    }
+
+    .buttons {
+        justify-content: center;
+    }
+
+    .menu {
+        display: none;
+    }
+}
+</style>
 </head>
+
 <body>
 
 <header>
     <div class="nav">
-        <div class="logo">SOUTH WIDTH</div>
+        <div class="logo">
+            <!-- CAMBIA LA IMAGEN -->
+            <img src="img/logo.png" alt="South Width">
+        </div>
         <nav class="menu">
-            <a href="#">Inicio</a>
-            <a href="#">Ropa</a>
-            <a href="#">Accesorios</a>
-            <a href="#">Colecciones</a>
-            <a href="#">Contacto</a>
+            <a href="#inicio">Inicio</a>
+            <a href="#ropa">Ropa</a>
+            <a href="#accesorios">Accesorios</a>
+            <a href="#colecciones">Colecciones</a>
+            <a href="#contacto">Contacto</a>
         </nav>
     </div>
 </header>
 
-<section class="hero">
-    <div class="hero-text">
-        <h1>
-            STREETWEAR<br>
-            <span>DESDE EL SUR</span>
-        </h1>
-
-        <p>
-            South Width nace en el sur de Chile, inspirada en la calle,
-            el frío y la identidad. Diseños limpios, reales y sin exceso.
-        </p>
-
-        <div class="buttons">
-            <a href="#" class="btn">VER COLECCIÓN</a>
-            <a href="#" class="btn alt">NUEVOS LANZAMIENTOS</a>
+<section id="inicio" class="hero">
+    <div class="hero-text fade-left">
+        <h1>STREETWEAR<br><span>DESDE EL SUR</span></h1>
+        <p>South Width nace en el sur de Chile. Diseño urbano, identidad real y estilo sin exceso.</p>
+        <div class="buttons fade-up">
+            <a href="#ropa" class="btn">VER COLECCIÓN</a>
+            <a href="#colecciones" class="btn alt">DROPS</a>
         </div>
     </div>
 
-    <div class="hero-img">
-        <!-- CAMBIA ESTA IMAGEN POR UNA TUYA -->
+    <div class="hero-img fade-right">
         <img src="https://images.unsplash.com/photo-1520975867597-0af37a22e31a" alt="Streetwear">
     </div>
 </section>
+
+<section id="ropa" class="section fade-up">
+    <h2>Ropa</h2>
+    <p>Prendas pensadas para el día a día.</p>
+    <div class="grid">
+        <div class="card">Poleras</div>
+        <div class="card">Polerones</div>
+        <div class="card">Pantalones</div>
+    </div>
+</section>
+
+<section id="accesorios" class="section fade-up">
+    <h2>Accesorios</h2>
+    <p>Complementos urbanos.</p>
+    <div class="grid">
+        <div class="card">Gorros</div>
+        <div class="card">Bolsos</div>
+        <div class="card">Cinturones</div>
+    </div>
+</section>
+
+<section id="colecciones" class="section fade-up">
+    <h2>Colecciones</h2>
+    <p>Lanzamientos exclusivos.</p>
+    <div class="grid">
+        <div class="card">DROP SUR</div>
+        <div class="card">WINTER CORE</div>
+        <div class="card">ESSENTIALS</div>
+    </div>
+</section>
+
+<section id="contacto" class="section fade-up">
+    <h2>Contacto</h2>
+    <p>Conversemos.</p>
+    <form class="contact-form">
+        <input type="text" placeholder="Nombre" required>
+        <input type="email" placeholder="Correo" required>
+        <textarea placeholder="Mensaje"></textarea>
+        <button class="btn">Enviar</button>
+    </form>
+</section>
+
+<script>
+/* ANIMACIONES SCROLL */
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+        }
+    });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up, .fade-left, .fade-right')
+.forEach(el => observer.observe(el));
+
+/* NAVBAR SCROLL */
+const header = document.querySelector("header");
+window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 80);
+});
+</script>
 
 </body>
 </html>
