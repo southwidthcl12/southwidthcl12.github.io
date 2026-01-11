@@ -11,13 +11,19 @@ body{background:#0e0e0e;color:#fff}
 
 /* NAV */
 header{
-  position:fixed;top:0;width:100%;
+  position:fixed;
+  top:0;
+  width:100%;
   padding:20px 60px;
   background:rgba(0,0,0,.7);
   backdrop-filter:blur(10px);
   z-index:100
 }
-.nav{display:flex;justify-content:space-between;align-items:center}
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
 .logo{font-weight:900;letter-spacing:2px}
 .menu a,#userName{
   margin-left:20px;
@@ -199,6 +205,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* 🔥 CONFIG FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyAVyVlXFJuVF3snNO3fvQy1ud1WGo15ri4",
   authDomain: "south-width.firebaseapp.com",
@@ -208,16 +215,17 @@ const firebaseConfig = {
   appId: "1:144617776304:web:6ed82ac4dcb2354a620775"
 };
 
+/* 🔐 ADMINS */
 const ADMINS = [
   "admin@southwidth.cl",
-  "TU_CORREO@gmail.com"
+  "alexandersteam1213@gmail.com"
 ];
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-/* ELEMENTOS */
+/* ELEMENTOS NAV */
 const loginLink  = document.getElementById("loginLink");
 const logoutLink = document.getElementById("logoutLink");
 const userName   = document.getElementById("userName");
@@ -226,18 +234,19 @@ const adminLink  = document.getElementById("adminLink");
 let cart = [];
 let currentUser = null;
 
-/* AUTH STATE */
+/* 🔐 ESTADO DE SESIÓN */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
 
+    const email = user.email.toLowerCase().trim();
+    const name  = user.displayName || email.split("@")[0];
+
     loginLink.style.display  = "none";
     logoutLink.style.display = "inline-block";
+    userName.textContent    = `Hola, ${name}`;
 
-    const name = user.displayName || user.email.split("@")[0];
-    userName.textContent = `Hola, ${name}`;
-
-    adminLink.style.display = ADMINS.includes(user.email)
+    adminLink.style.display = ADMINS.includes(email)
       ? "inline-block"
       : "none";
 
@@ -257,14 +266,15 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-/* LOGOUT */
+/* 🚪 LOGOUT */
 logoutLink.addEventListener("click", (e) => {
   e.preventDefault();
   signOut(auth);
 });
 
-/* CARRITO FIRESTORE */
+/* 🛒 CARRITO FIRESTORE */
 async function loadCart(){
+  if(!currentUser) return;
   const ref = doc(db,"carts",currentUser.uid);
   const snap = await getDoc(ref);
   if(snap.exists()) cart = snap.data().items || [];
@@ -275,7 +285,7 @@ async function saveCart(){
   await setDoc(doc(db,"carts",currentUser.uid),{items:cart});
 }
 
-/* CARRITO UI */
+/* 🛍️ FUNCIONES CARRITO */
 window.addToCart = async (name,price)=>{
   const item = cart.find(p=>p.name===name);
   if(item) item.qty++;
