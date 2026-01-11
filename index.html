@@ -6,43 +6,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* --- ESTILOS GENERALES --- */
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
 body{background:#0e0e0e;color:#fff}
 
-/* NAV */
+/* --- NAV --- */
 header{
   position:fixed;
   top:0;
   width:100%;
   padding:20px 60px;
-  background:rgba(0,0,0,.7);
+  background:rgba(0,0,0,.8);
   backdrop-filter:blur(10px);
-  z-index:100
+  z-index:100;
+  border-bottom: 1px solid #222;
 }
 .nav{
   display:flex;
   justify-content:space-between;
   align-items:center
 }
-.logo{font-weight:900;letter-spacing:2px}
+.logo{font-weight:900;letter-spacing:2px; font-size: 20px;}
 .menu a,#userName{
   margin-left:20px;
-  color:#fff;
+  color:#ccc;
   text-decoration:none;
-  font-size:14px
+  font-size:14px;
+  transition: color 0.3s;
 }
-.menu a:hover{opacity:.7}
-#userName{color:#aaa}
+.menu a:hover{color:#fff}
+#userName{color:#fff; font-weight: bold;}
 
-/* HERO */
+/* --- HERO & PRODUCTOS (VISTAS PRINCIPALES) --- */
+#view-store {
+  display: block; /* Visible por defecto */
+}
+
 main{
   height:100vh;
   display:flex;
   align-items:center;
   padding:0 60px
 }
-.hero h1{font-size:64px}
-.hero h2{font-size:64px;color:#555}
+.hero h1{font-size:64px; line-height: 1;}
+.hero h2{font-size:64px;color:#555; line-height: 1;}
 .hero p{color:#aaa;margin:20px 0}
 .btn{
   display:inline-block;
@@ -50,18 +57,19 @@ main{
   border:1px solid #fff;
   color:#fff;
   text-decoration:none;
-  transition:.3s
+  transition:.3s;
+  cursor: pointer;
 }
 .btn:hover{background:#fff;color:#000}
 
-/* PRODUCTOS */
 #ropa{padding:120px 60px}
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:30px
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:40px
 }
 .card{
+  background: #111;
   border:1px solid #333;
   padding:20px;
   text-align:center;
@@ -69,39 +77,46 @@ main{
 }
 .card:hover{
   transform:translateY(-6px);
-  box-shadow:0 20px 40px rgba(0,0,0,.6)
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  border-color: #555;
 }
 .card img{
   width:100%;
-  height:220px;
+  height:250px;
   object-fit:cover;
-  margin-bottom:15px
+  margin-bottom:15px;
+  filter: grayscale(20%);
 }
+.card:hover img { filter: grayscale(0%); }
+
 .card button{
   padding:10px 22px;
   background:#fff;
+  color: #000;
   border:none;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
-  transition:.2s
+  transition:.2s;
+  margin-top: 10px;
 }
 .card button:active{transform:scale(.95)}
 
-/* CARRITO */
+/* --- CARRITO LATERAL --- */
 #cartBtn{
   position:fixed;
-  bottom:20px;
-  right:20px;
+  bottom:30px;
+  right:30px;
   background:#fff;
   color:#000;
-  padding:12px 20px;
+  padding:15px 25px;
   cursor:pointer;
   z-index:200;
   border-radius: 50px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  font-weight: bold;
 }
 #cartBtn span{
-  background:red;
+  background:#e60000;
   color:#fff;
   border-radius:50%;
   padding:2px 6px;
@@ -111,35 +126,51 @@ main{
 }
 #cart{
   position:fixed;
-  right:-360px;
+  right:-400px;
   top:0;
-  width:340px; /* Un poco más ancho para los botones */
+  width:360px;
   height:100vh;
-  background:rgba(15,15,15,.98);
+  background:#111;
   border-left: 1px solid #333;
-  backdrop-filter:blur(10px);
-  padding:20px;
-  transition:.4s;
+  padding:30px;
+  transition:.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index:150;
-  overflow-y: auto; /* Para scrollear si hay muchos items */
+  display: flex;
+  flex-direction: column;
 }
 #cart.active{right:0}
+#overlay {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 140;
+    display: none;
+}
+#overlay.active { display: block; }
+
+.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px;}
+.close-cart { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+
+#cartItems { flex-grow: 1; overflow-y: auto; }
 
 .cart-item{
-  margin-bottom:12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom:15px;
   font-size:14px;
   border-bottom: 1px solid #222;
   padding-bottom: 10px;
 }
+.cart-info strong { display: block; margin-bottom: 4px; font-size: 15px;}
 .cart-controls{
   display:flex;
-  gap:8px;
-  margin-top:6px;
-  align-items:center
+  gap:10px;
+  align-items:center;
 }
 .cart-controls button{
-  width:22px;
-  height:22px;
+  width:24px;
+  height:24px;
   background:#333;
   border:none;
   color:#fff;
@@ -148,47 +179,104 @@ main{
 }
 .cart-remove{
   color:#ff5f5f;
-  font-size:12px;
+  font-size:11px;
   cursor:pointer;
-  margin-left:auto
-}
-.total{
-  margin-top:20px;
-  font-weight:700;
-  font-size: 18px;
-  border-top: 1px solid #444;
-  padding-top: 15px;
-  margin-bottom: 20px;
+  text-decoration: underline;
+  margin-top: 5px;
+  display: block;
 }
 
-/* ESTILOS DE BOTONES DE PAGO */
-#paymentOptions {
-  display: none; /* Se oculta si no hay items */
-  flex-direction: column;
-  gap: 10px;
+.cart-footer { margin-top: auto; border-top: 1px solid #333; padding-top: 20px; }
+.total{ font-size: 20px; font-weight:700; margin-bottom: 15px; display: flex; justify-content: space-between;}
+
+/* BOTÓN IR A PAGAR (En Sidebar) */
+.btn-checkout-start {
+    width: 100%;
+    padding: 15px;
+    background: #fff;
+    color: #000;
+    font-weight: 900;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.btn-checkout-start:hover { background: #ddd; }
+
+
+/* --- VISTA CHECKOUT (PANTALLA DE PAGO) --- */
+#view-checkout {
+    display: none; /* Oculto por defecto */
+    padding-top: 100px; /* Espacio para el header */
+    padding-bottom: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+}
+
+@media (max-width: 768px) {
+    .checkout-grid { grid-template-columns: 1fr; }
+}
+
+.checkout-col h2 { margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+/* Resumen en Checkout */
+.order-summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #222;
+}
+.final-total {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* Botones de Pago Final */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 .btn-pay {
   width: 100%;
-  padding: 12px;
+  padding: 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: opacity 0.2s;
+  transition: transform 0.2s;
 }
-.btn-pay:hover { opacity: 0.9; }
-.btn-pay:active { transform: scale(0.98); }
+.btn-pay:hover { opacity: 0.9; transform: translateY(-2px); }
 
-/* Colores de Marca */
-.btn-mp { background: #009EE3; color: white; } /* Mercado Pago */
-.btn-pp { background: #FFC439; color: #000; }  /* PayPal */
-.btn-wp { background: #8B0000; color: white; } /* Webpay (Rojo oscuro para combinar) */
+.mp { background: #009EE3; } /* MercadoPago */
+.pp { background: #FFC439; color: #000; } /* PayPal */
+.wp { background: #8B0000; } /* WebPay */
+
+.btn-back {
+    margin-top: 20px;
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.btn-back:hover { border-color: #fff; color: #fff; }
 
 </style>
 </head>
@@ -199,8 +287,8 @@ main{
   <div class="nav">
     <div class="logo">SOUTH WIDTH</div>
     <nav class="menu">
-      <a href="#inicio">Inicio</a>
-      <a href="#ropa">Ropa</a>
+      <a href="#" onclick="showStore()">Inicio</a>
+      <a href="#" onclick="showStore(); document.getElementById('ropa').scrollIntoView();">Ropa</a>
 
       <span id="userName"></span>
       <a href="login.html" id="loginLink">Login</a>
@@ -210,74 +298,103 @@ main{
   </div>
 </header>
 
-<main id="inicio">
-  <div class="hero">
-    <h1>STREETWEAR</h1>
-    <h2>DESDE EL SUR</h2>
-    <p>Marca urbana inspirada en el sur de Chile.</p>
-    <a href="#ropa" class="btn">VER ROPA</a>
-  </div>
-</main>
+<div id="view-store">
+    <main id="inicio">
+      <div class="hero">
+        <h1>STREETWEAR</h1>
+        <h2>DESDE EL SUR</h2>
+        <p>Marca urbana inspirada en el sur de Chile.</p>
+        <a href="#ropa" class="btn">VER ROPA</a>
+      </div>
+    </main>
 
-<section id="ropa">
-  <h2 style="margin-bottom:30px">Productos</h2>
-  <div class="grid">
+    <section id="ropa">
+      <h2 style="margin-bottom:30px; font-size:32px;">Latest Drop</h2>
+      <div class="grid">
 
-    <div class="card">
-      <img src="https://picsum.photos/400/400?1">
-      <h4>Polera Negra</h4>
-      <p>$19.990</p>
-      <button onclick="addToCart('Polera Negra',19990)">Agregar</button>
+        <div class="card">
+          <img src="https://picsum.photos/400/400?1">
+          <h4>Polera Negra Basic</h4>
+          <p>$19.990</p>
+          <button onclick="addToCart('Polera Negra Basic',19990)">AGREGAR +</button>
+        </div>
+
+        <div class="card">
+          <img src="https://picsum.photos/400/400?2">
+          <h4>Polerón Oversize</h4>
+          <p>$39.990</p>
+          <button onclick="addToCart('Polerón Oversize',39990)">AGREGAR +</button>
+        </div>
+        
+        <div class="card">
+            <img src="https://picsum.photos/400/400?3">
+            <h4>Gorro South Width</h4>
+            <p>$14.990</p>
+            <button onclick="addToCart('Gorro South Width',14990)">AGREGAR +</button>
+        </div>
+
+      </div>
+    </section>
+</div>
+
+<div id="view-checkout">
+    <div class="checkout-grid">
+        <div class="checkout-col">
+            <h2>Resumen del Pedido</h2>
+            <div id="checkoutItems">
+                </div>
+            <div class="final-total" id="checkoutTotal">Total: $0</div>
+            <button class="btn-back" onclick="showStore()">← Volver a la tienda</button>
+        </div>
+
+        <div class="checkout-col">
+            <h2>Método de Pago</h2>
+            <p style="color:#aaa; margin-bottom:20px;">Selecciona una opción segura:</p>
+            
+            <div class="payment-methods">
+                <button class="btn-pay mp" onclick="processPayment('Mercado Pago')">
+                    Pagar con Mercado Pago
+                </button>
+
+                <button class="btn-pay pp" onclick="processPayment('PayPal')">
+                    Pagar con PayPal
+                </button>
+
+                <button class="btn-pay wp" onclick="processPayment('Webpay')">
+                    Pagar con Webpay / Transbank
+                </button>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="card">
-      <img src="https://picsum.photos/400/400?2">
-      <h4>Polerón Oversize</h4>
-      <p>$39.990</p>
-      <button onclick="addToCart('Polerón Oversize',39990)">Agregar</button>
-    </div>
-
-  </div>
-</section>
-
+<div id="overlay" onclick="toggleCart()"></div>
 <div id="cart">
-  <h3 style="margin-bottom: 20px;">Tu Carrito</h3>
+  <div class="cart-header">
+      <h3>Tu Carrito</h3>
+      <button class="close-cart" onclick="toggleCart()">×</button>
+  </div>
   
   <div id="cartItems"></div>
   
-  <div class="total" id="cartTotal">Total: $0</div>
-
-  <div id="paymentOptions">
-    <p style="font-size:12px; color:#aaa; margin-bottom:10px; text-align:center;">Selecciona método de pago:</p>
-    
-    <button class="btn-pay btn-mp" onclick="initiateCheckout('mercadopago')">
-       Mercado Pago
-    </button>
-
-    <button class="btn-pay btn-pp" onclick="initiateCheckout('paypal')">
-       PayPal
-    </button>
-
-    <button class="btn-pay btn-wp" onclick="initiateCheckout('webpay')">
-       Webpay / Transbank
-    </button>
+  <div class="cart-footer">
+      <div class="total" id="cartTotal">
+          <span>Total:</span>
+          <span id="cartTotalAmount">$0</span>
+      </div>
+      <button class="btn-checkout-start" onclick="goToCheckout()">IR A PAGAR →</button>
   </div>
 </div>
 
 <div id="cartBtn" onclick="toggleCart()">🛒 <span id="cartCount">0</span></div>
 
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { 
-  getFirestore, 
-  doc, 
-  getDoc, 
-  setDoc,
-  serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* CONFIG */
+/* CONFIGURACIÓN FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyAVyVlXFJuVF3snNO3fvQy1ud1WGo15ri4",
   authDomain: "south-width.firebaseapp.com",
@@ -287,16 +404,12 @@ const firebaseConfig = {
   appId: "1:144617776304:web:6ed82ac4dcb2354a620775"
 };
 
-const ADMINS = [
-  "admin@southwidth.cl",
-  "alexandersteam1213@gmail.com"
-];
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+const ADMINS = ["admin@southwidth.cl", "alexandersteam1213@gmail.com"];
 
-/* ELEMENTOS */
+/* ELEMENTOS DOM */
 const loginLink  = document.getElementById("loginLink");
 const logoutLink = document.getElementById("logoutLink");
 const userName   = document.getElementById("userName");
@@ -309,10 +422,10 @@ let currentUser = null;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-
     const email = user.email.toLowerCase().trim();
     const name  = user.displayName || email.split("@")[0];
 
+    // Guardar usuario en BD si no existe
     await setDoc(doc(db,"usuarios",user.uid),{
       email,
       nombre: user.displayName || "",
@@ -321,36 +434,28 @@ onAuthStateChanged(auth, async (user) => {
       createdAt: serverTimestamp()
     },{ merge:true });
 
+    // UI Updates
     loginLink.style.display  = "none";
     logoutLink.style.display = "inline-block";
     userName.textContent    = `Hola, ${name}`;
-    adminLink.style.display = ADMINS.includes(email)
-      ? "inline-block"
-      : "none";
+    adminLink.style.display = ADMINS.includes(email) ? "inline-block" : "none";
 
     await loadCart();
     renderCart();
-
   } else {
     currentUser = null;
     cart = [];
-
     loginLink.style.display  = "inline-block";
     logoutLink.style.display = "none";
     adminLink.style.display  = "none";
     userName.textContent    = "";
-
     renderCart();
   }
 });
 
-/* LOGOUT */
-logoutLink.onclick = (e)=>{
-  e.preventDefault();
-  signOut(auth);
-};
+logoutLink.onclick = (e)=>{ e.preventDefault(); signOut(auth); };
 
-/* CARRITO */
+/* FUNCIONES DE CARRITO (BD) */
 async function loadCart(){
   if(!currentUser) return;
   const ref = doc(db,"carts",currentUser.uid);
@@ -363,26 +468,28 @@ async function saveCart(){
   await setDoc(doc(db,"carts",currentUser.uid),{items:cart});
 }
 
+/* LÓGICA FRONTEND */
 window.addToCart = async (name,price)=>{
   const item = cart.find(p=>p.name===name);
   if(item) item.qty++;
   else cart.push({name,price,qty:1});
   
   if(!currentUser) {
-     alert("Por favor inicia sesión para guardar tu carrito");
-     // Opcional: Podrías permitir carrito local (localStorage) si prefieres
+     alert("Guarda tus productos iniciando sesión.");
   }
   
   await saveCart();
   renderCart();
   
-  // Abrir carrito automáticamente al agregar (UX Opcional)
+  // Abrir carrito al agregar
   document.getElementById("cart").classList.add("active");
+  document.getElementById("overlay").classList.add("active");
 };
 
 function renderCart(){
   const cont = document.getElementById("cartItems");
-  const payOpts = document.getElementById("paymentOptions");
+  const checkoutBtn = document.querySelector(".btn-checkout-start");
+  
   cont.innerHTML="";
   let total=0,count=0;
 
@@ -391,27 +498,33 @@ function renderCart(){
     count+=p.qty;
     cont.innerHTML+=`
       <div class="cart-item">
-        <strong>${p.name}</strong><br>$${p.price.toLocaleString("es-CL")}
+        <div class="cart-info">
+            <strong>${p.name}</strong>
+            $${p.price.toLocaleString("es-CL")}
+            <span class="cart-remove" onclick="removeItem(${i})">Eliminar</span>
+        </div>
         <div class="cart-controls">
           <button onclick="changeQty(${i},-1)">-</button>
           <span>${p.qty}</span>
           <button onclick="changeQty(${i},1)">+</button>
-          <span class="cart-remove" onclick="removeItem(${i})">Eliminar</span>
         </div>
       </div>
     `;
   });
 
-  document.getElementById("cartTotal").textContent =
-    "Total: $" + total.toLocaleString("es-CL");
+  document.getElementById("cartTotalAmount").textContent = "$" + total.toLocaleString("es-CL");
   document.getElementById("cartCount").textContent = count;
 
-  // Mostrar u ocultar botones de pago según si hay items
-  if(cart.length > 0){
-      payOpts.style.display = "flex";
+  // Si carrito vacío, deshabilitar botón de ir a pagar
+  if(cart.length === 0){
+      cont.innerHTML = "<p style='color:#666; text-align:center; margin-top:20px;'>Carrito vacío</p>";
+      checkoutBtn.style.opacity = "0.5";
+      checkoutBtn.style.pointerEvents = "none";
+      checkoutBtn.textContent = "Carrito Vacío";
   } else {
-      payOpts.style.display = "none";
-      cont.innerHTML = "<p style='color:#666; text-align:center;'>Tu carrito está vacío.</p>";
+      checkoutBtn.style.opacity = "1";
+      checkoutBtn.style.pointerEvents = "all";
+      checkoutBtn.textContent = "IR A PAGAR →";
   }
 }
 
@@ -420,41 +533,81 @@ window.changeQty = async (i,val)=>{
   if(cart[i].qty<=0) cart.splice(i,1);
   await saveCart();
   renderCart();
+  // Si estamos en la vista checkout, actualizarla también
+  renderCheckoutSummary(); 
 };
 
 window.removeItem = async (i)=>{
   cart.splice(i,1);
   await saveCart();
   renderCart();
+  renderCheckoutSummary();
 };
 
 window.toggleCart = ()=>{
   document.getElementById("cart").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
 };
 
-/* LÓGICA DE PAGO (INTEGRACIÓN FUTURA) */
-window.initiateCheckout = (method) => {
-    // 1. Verificar si el usuario está logueado
+/* --- NAVEGACIÓN ENTRE VISTAS --- */
+
+// Ir a la pantalla de Checkout
+window.goToCheckout = () => {
     if(!currentUser){
-        alert("Debes iniciar sesión para pagar.");
+        alert("Debes iniciar sesión para proceder al pago.");
+        return;
+    }
+    
+    // 1. Cerrar carrito lateral
+    document.getElementById("cart").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
+
+    // 2. Ocultar Tienda y Mostrar Checkout
+    document.getElementById("view-store").style.display = "none";
+    document.getElementById("view-checkout").style.display = "block";
+    window.scrollTo(0,0);
+
+    // 3. Renderizar resumen
+    renderCheckoutSummary();
+};
+
+// Volver a la Tienda
+window.showStore = () => {
+    document.getElementById("view-checkout").style.display = "none";
+    document.getElementById("view-store").style.display = "block";
+};
+
+// Renderizar resumen en Checkout
+function renderCheckoutSummary() {
+    const cont = document.getElementById("checkoutItems");
+    let total = 0;
+    cont.innerHTML = "";
+
+    if(cart.length === 0){
+        showStore(); // Si borra todo, volver al inicio
         return;
     }
 
-    // Calcular total actual
-    let total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-    console.log(`Iniciando pago con ${method} por $${total}`);
+    cart.forEach(p => {
+        let subtotal = p.price * p.qty;
+        total += subtotal;
+        cont.innerHTML += `
+            <div class="order-summary-item">
+                <div>${p.name} <span style="color:#666">x${p.qty}</span></div>
+                <div>$${subtotal.toLocaleString("es-CL")}</div>
+            </div>
+        `;
+    });
 
-    // AQUÍ IRÁ TU LÓGICA REAL DE PAGO
-    if(method === 'mercadopago'){
-        // Ejemplo: window.location.href = "TU_LINK_DE_MERCADO_PAGO";
-        alert("Redirigiendo a Mercado Pago... (Configurar Link)");
-    } 
-    else if(method === 'paypal'){
-        alert("Redirigiendo a PayPal... (Configurar Link)");
-    } 
-    else if(method === 'webpay'){
-        alert("Iniciando transacción Webpay... (Requiere Backend)");
-    }
+    document.getElementById("checkoutTotal").textContent = "Total a Pagar: $" + total.toLocaleString("es-CL");
+}
+
+/* LÓGICA DE PAGO SIMULADA */
+window.processPayment = (method) => {
+    alert("Redirigiendo a " + method + "...\n(Aquí iría tu enlace de pago real)");
+    
+    // Ejemplo real futuro:
+    // if(method === 'Mercado Pago') window.location.href = 'TU_LINK_MP';
 };
 
 </script>
