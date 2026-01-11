@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
 body{background:#0e0e0e;color:#fff}
 
 /* NAV */
@@ -96,7 +96,9 @@ main{
   color:#000;
   padding:12px 20px;
   cursor:pointer;
-  z-index:200
+  z-index:200;
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 #cartBtn span{
   background:red;
@@ -104,23 +106,31 @@ main{
   border-radius:50%;
   padding:2px 6px;
   font-size:12px;
-  margin-left:6px
+  margin-left:6px;
+  vertical-align: top;
 }
 #cart{
   position:fixed;
   right:-360px;
   top:0;
-  width:320px;
+  width:340px; /* Un poco más ancho para los botones */
   height:100vh;
-  background:rgba(15,15,15,.95);
+  background:rgba(15,15,15,.98);
+  border-left: 1px solid #333;
   backdrop-filter:blur(10px);
   padding:20px;
   transition:.4s;
-  z-index:150
+  z-index:150;
+  overflow-y: auto; /* Para scrollear si hay muchos items */
 }
 #cart.active{right:0}
 
-.cart-item{margin-bottom:12px;font-size:14px}
+.cart-item{
+  margin-bottom:12px;
+  font-size:14px;
+  border-bottom: 1px solid #222;
+  padding-bottom: 10px;
+}
 .cart-controls{
   display:flex;
   gap:8px;
@@ -133,7 +143,8 @@ main{
   background:#333;
   border:none;
   color:#fff;
-  cursor:pointer
+  cursor:pointer;
+  border-radius: 4px;
 }
 .cart-remove{
   color:#ff5f5f;
@@ -141,7 +152,44 @@ main{
   cursor:pointer;
   margin-left:auto
 }
-.total{margin-top:20px;font-weight:700}
+.total{
+  margin-top:20px;
+  font-weight:700;
+  font-size: 18px;
+  border-top: 1px solid #444;
+  padding-top: 15px;
+  margin-bottom: 20px;
+}
+
+/* ESTILOS DE BOTONES DE PAGO */
+#paymentOptions {
+  display: none; /* Se oculta si no hay items */
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-pay {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s;
+}
+.btn-pay:hover { opacity: 0.9; }
+.btn-pay:active { transform: scale(0.98); }
+
+/* Colores de Marca */
+.btn-mp { background: #009EE3; color: white; } /* Mercado Pago */
+.btn-pp { background: #FFC439; color: #000; }  /* PayPal */
+.btn-wp { background: #8B0000; color: white; } /* Webpay (Rojo oscuro para combinar) */
+
 </style>
 </head>
 
@@ -192,16 +240,32 @@ main{
   </div>
 </section>
 
-<!-- CARRITO -->
 <div id="cart">
-  <h3>Carrito</h3>
+  <h3 style="margin-bottom: 20px;">Tu Carrito</h3>
+  
   <div id="cartItems"></div>
+  
   <div class="total" id="cartTotal">Total: $0</div>
+
+  <div id="paymentOptions">
+    <p style="font-size:12px; color:#aaa; margin-bottom:10px; text-align:center;">Selecciona método de pago:</p>
+    
+    <button class="btn-pay btn-mp" onclick="initiateCheckout('mercadopago')">
+       Mercado Pago
+    </button>
+
+    <button class="btn-pay btn-pp" onclick="initiateCheckout('paypal')">
+       PayPal
+    </button>
+
+    <button class="btn-pay btn-wp" onclick="initiateCheckout('webpay')">
+       Webpay / Transbank
+    </button>
+  </div>
 </div>
 
 <div id="cartBtn" onclick="toggleCart()">🛒 <span id="cartCount">0</span></div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -303,12 +367,22 @@ window.addToCart = async (name,price)=>{
   const item = cart.find(p=>p.name===name);
   if(item) item.qty++;
   else cart.push({name,price,qty:1});
+  
+  if(!currentUser) {
+     alert("Por favor inicia sesión para guardar tu carrito");
+     // Opcional: Podrías permitir carrito local (localStorage) si prefieres
+  }
+  
   await saveCart();
   renderCart();
+  
+  // Abrir carrito automáticamente al agregar (UX Opcional)
+  document.getElementById("cart").classList.add("active");
 };
 
 function renderCart(){
-  const cont=document.getElementById("cartItems");
+  const cont = document.getElementById("cartItems");
+  const payOpts = document.getElementById("paymentOptions");
   cont.innerHTML="";
   let total=0,count=0;
 
@@ -317,7 +391,7 @@ function renderCart(){
     count+=p.qty;
     cont.innerHTML+=`
       <div class="cart-item">
-        <strong>${p.name}</strong><br>$${p.price}
+        <strong>${p.name}</strong><br>$${p.price.toLocaleString("es-CL")}
         <div class="cart-controls">
           <button onclick="changeQty(${i},-1)">-</button>
           <span>${p.qty}</span>
@@ -331,6 +405,14 @@ function renderCart(){
   document.getElementById("cartTotal").textContent =
     "Total: $" + total.toLocaleString("es-CL");
   document.getElementById("cartCount").textContent = count;
+
+  // Mostrar u ocultar botones de pago según si hay items
+  if(cart.length > 0){
+      payOpts.style.display = "flex";
+  } else {
+      payOpts.style.display = "none";
+      cont.innerHTML = "<p style='color:#666; text-align:center;'>Tu carrito está vacío.</p>";
+  }
 }
 
 window.changeQty = async (i,val)=>{
@@ -349,6 +431,32 @@ window.removeItem = async (i)=>{
 window.toggleCart = ()=>{
   document.getElementById("cart").classList.toggle("active");
 };
+
+/* LÓGICA DE PAGO (INTEGRACIÓN FUTURA) */
+window.initiateCheckout = (method) => {
+    // 1. Verificar si el usuario está logueado
+    if(!currentUser){
+        alert("Debes iniciar sesión para pagar.");
+        return;
+    }
+
+    // Calcular total actual
+    let total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+    console.log(`Iniciando pago con ${method} por $${total}`);
+
+    // AQUÍ IRÁ TU LÓGICA REAL DE PAGO
+    if(method === 'mercadopago'){
+        // Ejemplo: window.location.href = "TU_LINK_DE_MERCADO_PAGO";
+        alert("Redirigiendo a Mercado Pago... (Configurar Link)");
+    } 
+    else if(method === 'paypal'){
+        alert("Redirigiendo a PayPal... (Configurar Link)");
+    } 
+    else if(method === 'webpay'){
+        alert("Iniciando transacción Webpay... (Requiere Backend)");
+    }
+};
+
 </script>
 
 </body>
