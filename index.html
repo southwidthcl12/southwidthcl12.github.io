@@ -174,6 +174,7 @@ main{
 <section id="ropa">
   <h2 style="margin-bottom:30px">Productos</h2>
   <div class="grid">
+
     <div class="card">
       <img src="https://picsum.photos/400/400?1">
       <h4>Polera Negra</h4>
@@ -187,6 +188,7 @@ main{
       <p>$39.990</p>
       <button onclick="addToCart('Polerón Oversize',39990)">Agregar</button>
     </div>
+
   </div>
 </section>
 
@@ -203,9 +205,15 @@ main{
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc,
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 CONFIG FIREBASE */
+/* CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAVyVlXFJuVF3snNO3fvQy1ud1WGo15ri4",
   authDomain: "south-width.firebaseapp.com",
@@ -215,7 +223,6 @@ const firebaseConfig = {
   appId: "1:144617776304:web:6ed82ac4dcb2354a620775"
 };
 
-/* 🔐 ADMINS */
 const ADMINS = [
   "admin@southwidth.cl",
   "alexandersteam1213@gmail.com"
@@ -225,7 +232,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-/* ELEMENTOS NAV */
+/* ELEMENTOS */
 const loginLink  = document.getElementById("loginLink");
 const logoutLink = document.getElementById("logoutLink");
 const userName   = document.getElementById("userName");
@@ -234,25 +241,25 @@ const adminLink  = document.getElementById("adminLink");
 let cart = [];
 let currentUser = null;
 
-/* 🔐 ESTADO DE SESIÓN */
+/* SESIÓN */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    await setDoc(doc(db, "usuarios", user.uid), {
-  email: user.email,
-  nombre: user.displayName || "",
-  provider: user.providerData[0].providerId,
-  createdAt: serverTimestamp()
-}, { merge: true });
-
 
     const email = user.email.toLowerCase().trim();
     const name  = user.displayName || email.split("@")[0];
 
+    await setDoc(doc(db,"usuarios",user.uid),{
+      email,
+      nombre: user.displayName || "",
+      provider: user.providerData[0].providerId,
+      role: ADMINS.includes(email) ? "admin" : "user",
+      createdAt: serverTimestamp()
+    },{ merge:true });
+
     loginLink.style.display  = "none";
     logoutLink.style.display = "inline-block";
     userName.textContent    = `Hola, ${name}`;
-
     adminLink.style.display = ADMINS.includes(email)
       ? "inline-block"
       : "none";
@@ -273,13 +280,13 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-/* 🚪 LOGOUT */
-logoutLink.addEventListener("click", (e) => {
+/* LOGOUT */
+logoutLink.onclick = (e)=>{
   e.preventDefault();
   signOut(auth);
-});
+};
 
-/* 🛒 CARRITO FIRESTORE */
+/* CARRITO */
 async function loadCart(){
   if(!currentUser) return;
   const ref = doc(db,"carts",currentUser.uid);
@@ -292,7 +299,6 @@ async function saveCart(){
   await setDoc(doc(db,"carts",currentUser.uid),{items:cart});
 }
 
-/* 🛍️ FUNCIONES CARRITO */
 window.addToCart = async (name,price)=>{
   const item = cart.find(p=>p.name===name);
   if(item) item.qty++;
@@ -304,7 +310,7 @@ window.addToCart = async (name,price)=>{
 function renderCart(){
   const cont=document.getElementById("cartItems");
   cont.innerHTML="";
-  let total=0, count=0;
+  let total=0,count=0;
 
   cart.forEach((p,i)=>{
     total+=p.price*p.qty;
