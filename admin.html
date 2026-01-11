@@ -30,11 +30,23 @@ h1{margin-bottom:20px}
   font-size:12px;
   margin-left:8px
 }
+input,button{
+  padding:8px;
+  margin-top:8px;
+  width:100%
+}
+button{
+  background:#fff;
+  border:none;
+  cursor:pointer;
+  font-weight:600
+}
+button:hover{opacity:.8}
 .logout{
-  display:inline-block;
-  margin-bottom:30px;
   color:#ff5f5f;
-  cursor:pointer
+  cursor:pointer;
+  margin-bottom:30px;
+  display:inline-block
 }
 </style>
 </head>
@@ -44,20 +56,29 @@ h1{margin-bottom:20px}
 <h1>Panel Admin – South Width</h1>
 <div class="logout" id="logout">Cerrar sesión</div>
 
+<!-- USUARIOS -->
 <div class="section">
   <h3>Usuarios registrados</h3>
   <div id="users"></div>
 </div>
 
+<!-- CUPONES -->
 <div class="section">
-  <h3>Carritos de usuarios</h3>
-  <div id="carts"></div>
+  <h3>Cupones de descuento</h3>
+
+  <input id="code" placeholder="Código del cupón">
+  <input id="discount" type="number" placeholder="% de descuento">
+  <button onclick="createCoupon()">Crear / Actualizar cupón</button>
+
+  <div id="coupons" style="margin-top:20px"></div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore,collection,getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth,onAuthStateChanged,signOut } from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore,collection,getDocs,doc,setDoc,updateDoc } from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAVyVlXFJuVF3snNO3fvQy1ud1WGo15ri4",
@@ -77,51 +98,81 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, async user=>{
-  if(!user || !ADMINS.includes(user.email)){
+/* PROTECCIÓN ADMIN */
+onAuthStateChanged(auth,user=>{
+  if(!user || !ADMINS.includes(user.email.toLowerCase())){
     location.href="index.html";
-    return;
+  } else {
+    loadUsers();
+    loadCoupons();
   }
-
-  loadUsers();
-  loadCarts();
 });
 
+/* LOGOUT */
 document.getElementById("logout").onclick=()=>{
   signOut(auth).then(()=>location.href="index.html");
 };
 
+/* USUARIOS */
 async function loadUsers(){
-  const usersDiv=document.getElementById("users");
+  const cont=document.getElementById("users");
+  cont.innerHTML="";
   const snap=await getDocs(collection(db,"usuarios"));
-  usersDiv.innerHTML="";
 
-  snap.forEach(doc=>{
-    const u=doc.data();
-    usersDiv.innerHTML+=`
+  snap.forEach(docu=>{
+    const u=docu.data();
+    cont.innerHTML+=`
       <div class="item">
-        ${u.nombre||""} ${u.apellido||""}
+        ${u.nombre || "Sin nombre"}
         <span class="badge">${u.email}</span>
+        <span class="badge">${u.provider}</span>
       </div>
     `;
   });
 }
 
-async function loadCarts(){
-  const cartsDiv=document.getElementById("carts");
-  const snap=await getDocs(collection(db,"carts"));
-  cartsDiv.innerHTML="";
+/* CUPONES */
+window.createCoupon = async ()=>{
+  const code=document.getElementById("code").value.toUpperCase();
+  const discount=parseInt(document.getElementById("discount").value);
 
-  snap.forEach(doc=>{
-    const items=doc.data().items||[];
-    cartsDiv.innerHTML+=`
+  if(!code || !discount) return alert("Completa los datos");
+
+  await setDoc(doc(db,"cupones",code),{
+    descuento: discount,
+    activo: true
+  });
+
+  document.getElementById("code").value="";
+  document.getElementById("discount").value="";
+  loadCoupons();
+};
+
+async function loadCoupons(){
+  const cont=document.getElementById("coupons");
+  cont.innerHTML="";
+  const snap=await getDocs(collection(db,"cupones"));
+
+  snap.forEach(docu=>{
+    const c=docu.data();
+    cont.innerHTML+=`
       <div class="item">
-        <strong>User ID:</strong> ${doc.id}<br>
-        Productos: ${items.length}
+        <strong>${docu.id}</strong> - ${c.descuento}% 
+        <span class="badge">${c.activo ? "Activo" : "Inactivo"}</span>
+        <button onclick="toggleCoupon('${docu.id}',${c.activo})">
+          ${c.activo ? "Desactivar" : "Activar"}
+        </button>
       </div>
     `;
   });
 }
+
+window.toggleCoupon = async (id,state)=>{
+  await updateDoc(doc(db,"cupones",id),{
+    activo: !state
+  });
+  loadCoupons();
+};
 </script>
 
 </body>
