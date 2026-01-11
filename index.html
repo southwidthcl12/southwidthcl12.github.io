@@ -131,6 +131,8 @@ main{
       <span id="userName"></span>
       <a href="login.html" id="loginLink">Login</a>
       <a href="#" id="logoutLink" style="display:none;">Salir</a>
+      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+
     </nav>
   </div>
 </header>
@@ -199,6 +201,12 @@ const userName=document.getElementById("userName");
 
 onAuthStateChanged(auth, async user=>{
   if(user){
+    const adminLink = document.getElementById("adminLink");
+
+if (ADMINS.includes(user.email)) {
+  adminLink.style.display = "inline-block";
+}
+
     currentUser = user;
     loginLink.style.display="none";
     logoutLink.style.display="inline-block";
