@@ -238,6 +238,13 @@ let currentUser = null;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
+    await setDoc(doc(db, "usuarios", user.uid), {
+  email: user.email,
+  nombre: user.displayName || "",
+  provider: user.providerData[0].providerId,
+  createdAt: serverTimestamp()
+}, { merge: true });
+
 
     const email = user.email.toLowerCase().trim();
     const name  = user.displayName || email.split("@")[0];
