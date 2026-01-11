@@ -48,6 +48,8 @@ button:hover{opacity:.8}
   margin-bottom:30px;
   display:inline-block
 }
+.role-admin{color:#5cff9f}
+.role-user{color:#aaa}
 </style>
 </head>
 
@@ -66,7 +68,7 @@ button:hover{opacity:.8}
 <div class="section">
   <h3>Cupones de descuento</h3>
 
-  <input id="code" placeholder="Código del cupón">
+  <input id="code" placeholder="Código del cupón (EJ: SW10)">
   <input id="discount" type="number" placeholder="% de descuento">
   <button onclick="createCoupon()">Crear / Actualizar cupón</button>
 
@@ -75,11 +77,21 @@ button:hover{opacity:.8}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth,onAuthStateChanged,signOut } from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore,collection,getDocs,doc,setDoc,updateDoc } from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getAuth,
+  onAuthStateChanged,
+  signOut 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  updateDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAVyVlXFJuVF3snNO3fvQy1ud1WGo15ri4",
   authDomain: "south-width.firebaseapp.com",
@@ -89,73 +101,84 @@ const firebaseConfig = {
   appId: "1:144617776304:web:6ed82ac4dcb2354a620775"
 };
 
+/* 👑 ADMINS */
 const ADMINS = [
   "admin@southwidth.cl",
   "alexandersteam1213@gmail.com"
 ];
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
 
-/* PROTECCIÓN ADMIN */
-onAuthStateChanged(auth,user=>{
-  if(!user || !ADMINS.includes(user.email.toLowerCase())){
-    location.href="index.html";
-  } else {
-    loadUsers();
-    loadCoupons();
+/* 🔐 PROTECCIÓN ADMIN */
+onAuthStateChanged(auth, async (user) => {
+  if (!user || !ADMINS.includes(user.email.toLowerCase().trim())) {
+    location.href = "index.html";
+    return;
   }
+
+  loadUsers();
+  loadCoupons();
 });
 
-/* LOGOUT */
-document.getElementById("logout").onclick=()=>{
-  signOut(auth).then(()=>location.href="index.html");
+/* 🚪 LOGOUT */
+document.getElementById("logout").onclick = async () => {
+  await signOut(auth);
+  location.href = "index.html";
 };
 
-/* USUARIOS */
+/* 👥 USUARIOS */
 async function loadUsers(){
-  const cont=document.getElementById("users");
-  cont.innerHTML="";
-  const snap=await getDocs(collection(db,"usuarios"));
+  const cont = document.getElementById("users");
+  cont.innerHTML = "";
+
+  const snap = await getDocs(collection(db,"usuarios"));
 
   snap.forEach(docu=>{
-    const u=docu.data();
-    cont.innerHTML+=`
+    const u = docu.data();
+    cont.innerHTML += `
       <div class="item">
-        ${u.nombre || "Sin nombre"}
+        <strong>${u.nombre || "Sin nombre"}</strong>
         <span class="badge">${u.email}</span>
         <span class="badge">${u.provider}</span>
+        <span class="badge ${u.role === "admin" ? "role-admin" : "role-user"}">
+          ${u.role || "user"}
+        </span>
       </div>
     `;
   });
 }
 
-/* CUPONES */
-window.createCoupon = async ()=>{
-  const code=document.getElementById("code").value.toUpperCase();
-  const discount=parseInt(document.getElementById("discount").value);
+/* 🎟️ CUPONES */
+window.createCoupon = async () => {
+  const code = document.getElementById("code").value.toUpperCase().trim();
+  const discount = parseInt(document.getElementById("discount").value);
 
-  if(!code || !discount) return alert("Completa los datos");
+  if (!code || !discount) {
+    alert("Completa los datos");
+    return;
+  }
 
   await setDoc(doc(db,"cupones",code),{
     descuento: discount,
     activo: true
   });
 
-  document.getElementById("code").value="";
-  document.getElementById("discount").value="";
+  document.getElementById("code").value = "";
+  document.getElementById("discount").value = "";
   loadCoupons();
 };
 
 async function loadCoupons(){
-  const cont=document.getElementById("coupons");
-  cont.innerHTML="";
-  const snap=await getDocs(collection(db,"cupones"));
+  const cont = document.getElementById("coupons");
+  cont.innerHTML = "";
+
+  const snap = await getDocs(collection(db,"cupones"));
 
   snap.forEach(docu=>{
-    const c=docu.data();
-    cont.innerHTML+=`
+    const c = docu.data();
+    cont.innerHTML += `
       <div class="item">
         <strong>${docu.id}</strong> - ${c.descuento}% 
         <span class="badge">${c.activo ? "Activo" : "Inactivo"}</span>
