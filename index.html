@@ -10,30 +10,50 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-color: #fff0f5; /* Color de fondo base */
             height: 100vh;
-            overflow: hidden; /* Evita scroll innecesario */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: #4a4a4a;
+            position: relative; /* Necesario para el canvas */
         }
 
-        /* --- Pantalla de Bienvenida (Intro) --- */
-        #intro-screen {
+        /* --- Fondo Animado --- */
+        #heart-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 1; /* Detrás del contenido principal */
+            pointer-events: none; /* Para que no interfiera con los clics */
+        }
+
+        /* --- Pantalla de Bienvenida (Intro) --- */
+        #intro-screen {
+            position: relative; /* Para que esté sobre el canvas */
+            z-index: 10;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #fff0f5; /* Un rosa muy suave */
+            background-color: transparent; /* Fondo transparente para ver los corazones */
             transition: opacity 1s ease-out, transform 1s ease-out;
-            z-index: 10;
+        }
+
+        /* Texto e imagen de la intro */
+        .intro-content h2 {
+            margin-bottom: 2rem;
+            color: #800f2f;
+            font-weight: bold;
+        }
+        
+        .intro-content img {
+            max-width: 100%; /* Ajustar al contenedor */
+            height: auto;
         }
 
         .heart-btn {
@@ -47,6 +67,14 @@
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
             transition: transform 0.3s;
             animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart-btn i {
+            margin-right: 10px;
+            font-size: 1.8rem;
         }
 
         .heart-btn:hover {
@@ -56,7 +84,9 @@
 
         /* --- Pantalla Principal (Menú) --- */
         #main-content {
-            opacity: 0; /* Oculto al inicio */
+            position: relative; /* Sobre el canvas */
+            z-index: 10;
+            opacity: 0;
             visibility: hidden;
             transition: opacity 1.5s ease-in;
             max-width: 600px;
@@ -99,7 +129,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- Animaciones --- */
+        /* --- Animaciones y Utilidades --- */
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
             70% { box-shadow: 0 0 0 20px rgba(255, 77, 109, 0); }
@@ -111,13 +141,48 @@
             transform: translateY(-50px);
             pointer-events: none;
         }
+        
+        /* --- Reproductor de Música --- */
+        #music-player {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100; /* Por encima de todo */
+        }
+        
+        #music-player audio {
+            width: 200px; /* Hacemos el control más pequeño */
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        #music-player audio:hover {
+            opacity: 1;
+        }
+        
+        /* Font Awesome (para el icono del corazón) */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
     </style>
 </head>
 <body>
 
+    <div id="music-player">
+        <audio id="bg-music" controls loop>
+            <source src="cancion.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+    </div>
+
+    <canvas id="heart-canvas"></canvas>
+
     <div id="intro-screen">
-        <h2 style="margin-bottom: 2rem; color: #800f2f;">Tengo algo que decirte...</h2>
-        <button class="heart-btn" onclick="openSurprise()">❤️ Abrir Sorpresa</button>
+        <div class="intro-content">
+            <h2>Tengo algo que decirte...</h2>
+            </div>
+        <button class="heart-btn" onclick="openSurprise()">
+            <i class="fas fa-heart"></i> Abrir Sorpresa
+        </button>
     </div>
 
     <div id="main-content">
@@ -133,9 +198,16 @@
     </div>
 
     <script>
+        /* --- Función para abrir la sorpresa y controlar la música --- */
         function openSurprise() {
             const intro = document.getElementById('intro-screen');
             const main = document.getElementById('main-content');
+            const music = document.getElementById('bg-music');
+
+            // Intentar reproducir música automáticamente al hacer clic
+            music.play().catch(error => {
+                console.log("La reproducción automática fue bloqueada. El usuario debe iniciarla manualmente desde el control.");
+            });
             
             // Efecto de desvanecimiento
             intro.classList.add('hidden');
@@ -146,6 +218,96 @@
                 main.style.opacity = '1';
             }, 500);
         }
+
+        /* --- Animación de Fondo de Corazones con Canvas --- */
+        const canvas = document.getElementById('heart-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let hearts = [];
+        const colors = ['#ff4d6d', '#c9184a', '#ff8fa3', '#fff0f3'];
+
+        function Heart(x, y, size, color, speedY) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+            this.speedY = speedY;
+        }
+
+        Heart.prototype.draw = function() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            let topCurveHeight = this.size * 0.3;
+            ctx.moveTo(this.x, this.y + topCurveHeight);
+            // Curva superior izquierda
+            ctx.bezierCurveTo(
+                this.x, this.y, 
+                this.x - this.size / 2, this.y, 
+                this.x - this.size / 2, this.y + topCurveHeight
+            );
+            // Curva inferior izquierda
+            ctx.bezierCurveTo(
+                this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, 
+                this.x, this.y + this.size + topCurveHeight, 
+                this.x, this.y + this.size
+            );
+            // Curva inferior derecha
+            ctx.bezierCurveTo(
+                this.x, this.y + this.size + topCurveHeight, 
+                this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, 
+                this.x + this.size / 2, this.y + topCurveHeight
+            );
+            // Curva superior derecha
+            ctx.bezierCurveTo(
+                this.x + this.size / 2, this.y, 
+                this.x, this.y, 
+                this.x, this.y + topCurveHeight
+            );
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        Heart.prototype.update = function() {
+            this.y -= this.speedY;
+            if (this.y + this.size < 0) {
+                this.y = canvas.height + this.size;
+                this.x = Math.random() * canvas.width;
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 50; i++) {
+                let size = Math.random() * 20 + 10;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                let speedY = Math.random() * 1 + 0.5;
+                hearts.push(new Heart(x, y, size, color, speedY));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < hearts.length; i++) {
+                hearts[i].update();
+                hearts[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Ajustar el tamaño del canvas si cambia el tamaño de la ventana
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            hearts = [];
+            init();
+        });
+
     </script>
 </body>
 </html>
