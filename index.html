@@ -99,6 +99,36 @@
         }
         .next-btn:hover { background-color: #590d22; transform: translateY(-2px); }
 
+        /* --- Estilos para la Carta Cerrada --- */
+        .closed-letter {
+            cursor: pointer;
+            text-align: center;
+            padding: 40px;
+            background: #800f2f;
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: float 3s ease-in-out infinite;
+            margin-bottom: 30px;
+        }
+        .closed-letter i {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .closed-letter p {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .sequence-content {
+            display: none; /* Oculto inicialmente */
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
         /* --- Responsive --- */
         @media screen and (max-width: 600px) {
             .intro-content h2 { font-size: 1.8rem; }
@@ -116,6 +146,12 @@
             0% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
             70% { box-shadow: 0 0 0 20px rgba(255, 77, 109, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
@@ -154,84 +190,120 @@
         </div>
 
         <div id="seq-1" class="screen">
-            <h2 class="sequence-title">Momento Especial 1</h2>
-            <div class="photo-gallery">
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+1A" alt="Foto 1A"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+1B" alt="Foto 1B"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+1C" alt="Foto 1C"></div>
+            <div class="closed-letter" onclick="openLetter('seq-1')">
+                <i class="fas fa-envelope"></i>
+                <p>Toca para abrir el recuerdo</p>
             </div>
-            <div class="text-box sequence-box">
-                <p>Aquí escribe el texto largo para el primer grupo de fotos. Describe qué sentías en ese momento, por qué elegiste estas fotos y qué significan para ti.</p>
-                <p>Puedes añadir más párrafos si lo necesitas.</p>
+            <div class="sequence-content">
+                <h2 class="sequence-title">Momento Especial 1</h2>
+                <div class="photo-gallery">
+                    <div class="photo-item"><img src="foto1a.jpg" alt="Foto 1A"></div>
+                    <div class="photo-item"><img src="foto1b.jpg" alt="Foto 1B"></div>
+                    <div class="photo-item"><img src="foto1c.jpg" alt="Foto 1C"></div>
+                </div>
+                <div class="text-box sequence-box">
+                    <p>Aquí escribe el texto largo para el primer grupo de fotos. Describe qué sentías en ese momento, por qué elegiste estas fotos y qué significan para ti.</p>
+                    <p>Puedes añadir más párrafos si lo necesitas.</p>
+                </div>
+                <button class="next-btn" onclick="changeScreen('seq-2')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
-            <button class="next-btn" onclick="changeScreen('seq-2')">Siguiente <i class="fas fa-arrow-right"></i></button>
         </div>
 
         <div id="seq-2" class="screen">
-            <h2 class="sequence-title">Momento Especial 2</h2>
-            <div class="photo-gallery">
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+2A" alt="Foto 2A"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+2B" alt="Foto 2B"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+2C" alt="Foto 2C"></div>
+            <div class="closed-letter" onclick="openLetter('seq-2')">
+                <i class="fas fa-envelope"></i>
+                <p>Toca para abrir el recuerdo</p>
             </div>
-            <div class="text-box sequence-box">
-                <p>Aquí va el texto para la segunda secuencia de fotos. Sigue contando la historia a través de las imágenes.</p>
+            <div class="sequence-content">
+                <h2 class="sequence-title">Momento Especial 2</h2>
+                <div class="photo-gallery">
+                    <div class="photo-item"><img src="foto2a.jpg" alt="Foto 2A"></div>
+                    <div class="photo-item"><img src="foto2b.jpg" alt="Foto 2B"></div>
+                    <div class="photo-item"><img src="foto2c.jpg" alt="Foto 2C"></div>
+                </div>
+                <div class="text-box sequence-box">
+                    <p>Aquí va el texto para la segunda secuencia de fotos. Sigue contando la historia a través de las imágenes.</p>
+                </div>
+                <button class="next-btn" onclick="changeScreen('seq-3')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
-            <button class="next-btn" onclick="changeScreen('seq-3')">Siguiente <i class="fas fa-arrow-right"></i></button>
         </div>
 
         <div id="seq-3" class="screen">
-            <h2 class="sequence-title">Momento Especial 3</h2>
-            <div class="photo-gallery">
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+3A" alt="Foto 3A"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+3B" alt="Foto 3B"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+3C" alt="Foto 3C"></div>
+            <div class="closed-letter" onclick="openLetter('seq-3')">
+                <i class="fas fa-envelope"></i>
+                <p>Toca para abrir el recuerdo</p>
             </div>
-            <div class="text-box sequence-box">
-                <p>Texto para la tercera secuencia.</p>
+            <div class="sequence-content">
+                <h2 class="sequence-title">Momento Especial 3</h2>
+                <div class="photo-gallery">
+                    <div class="photo-item"><img src="foto3a.jpg" alt="Foto 3A"></div>
+                    <div class="photo-item"><img src="foto3b.jpg" alt="Foto 3B"></div>
+                    <div class="photo-item"><img src="foto3c.jpg" alt="Foto 3C"></div>
+                </div>
+                <div class="text-box sequence-box">
+                    <p>Texto para la tercera secuencia.</p>
+                </div>
+                <button class="next-btn" onclick="changeScreen('seq-4')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
-            <button class="next-btn" onclick="changeScreen('seq-4')">Siguiente <i class="fas fa-arrow-right"></i></button>
         </div>
 
         <div id="seq-4" class="screen">
-            <h2 class="sequence-title">Momento Especial 4</h2>
-            <div class="photo-gallery">
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+4A" alt="Foto 4A"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+4B" alt="Foto 4B"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+4C" alt="Foto 4C"></div>
+            <div class="closed-letter" onclick="openLetter('seq-4')">
+                <i class="fas fa-envelope"></i>
+                <p>Toca para abrir el recuerdo</p>
             </div>
-            <div class="text-box sequence-box">
-                <p>Texto para la cuarta secuencia.</p>
+            <div class="sequence-content">
+                <h2 class="sequence-title">Momento Especial 4</h2>
+                <div class="photo-gallery">
+                    <div class="photo-item"><img src="foto4a.jpg" alt="Foto 4A"></div>
+                    <div class="photo-item"><img src="foto4b.jpg" alt="Foto 4B"></div>
+                    <div class="photo-item"><img src="foto4c.jpg" alt="Foto 4C"></div>
+                </div>
+                <div class="text-box sequence-box">
+                    <p>Texto para la cuarta secuencia.</p>
+                </div>
+                <button class="next-btn" onclick="changeScreen('seq-5')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
-            <button class="next-btn" onclick="changeScreen('seq-5')">Siguiente <i class="fas fa-arrow-right"></i></button>
         </div>
 
         <div id="seq-5" class="screen">
-            <h2 class="sequence-title">Momento Especial 5</h2>
-            <div class="photo-gallery">
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+5A" alt="Foto 5A"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+5B" alt="Foto 5B"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+5C" alt="Foto 5C"></div>
+            <div class="closed-letter" onclick="openLetter('seq-5')">
+                <i class="fas fa-envelope"></i>
+                <p>Toca para abrir el recuerdo</p>
             </div>
-            <div class="text-box sequence-box">
-                <p>Texto para la quinta secuencia.</p>
+            <div class="sequence-content">
+                <h2 class="sequence-title">Momento Especial 5</h2>
+                <div class="photo-gallery">
+                    <div class="photo-item"><img src="foto5a.jpg" alt="Foto 5A"></div>
+                    <div class="photo-item"><img src="foto5b.jpg" alt="Foto 5B"></div>
+                    <div class="photo-item"><img src="foto5c.jpg" alt="Foto 5C"></div>
+                </div>
+                <div class="text-box sequence-box">
+                    <p>Texto para la quinta secuencia.</p>
+                </div>
+                <button class="next-btn" onclick="changeScreen('seq-6')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
-            <button class="next-btn" onclick="changeScreen('seq-6')">Siguiente <i class="fas fa-arrow-right"></i></button>
         </div>
 
          <div id="seq-6" class="screen">
-            <h2 class="sequence-title">Y por todo esto...</h2>
-            <div class="photo-gallery">
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+Final+A" alt="Foto 6A"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+Final+B" alt="Foto 6B"></div>
-                <div class="photo-item"><img src="https://via.placeholder.com/300/ffccd5/800f2f?text=Foto+Final+C" alt="Foto 6C"></div>
+            <div class="closed-letter" onclick="openLetter('seq-6')">
+                <i class="fas fa-envelope"></i>
+                <p>Toca para abrir el recuerdo</p>
             </div>
-            <div class="text-box sequence-box">
-                <p>Este es el último texto antes del final. Aquí puedes resumir todo lo que has mostrado en las fotos anteriores.</p>
+            <div class="sequence-content">
+                <h2 class="sequence-title">Y por todo esto...</h2>
+                <div class="photo-gallery">
+                    <div class="photo-item"><img src="foto6a.jpg" alt="Foto 6A"></div>
+                    <div class="photo-item"><img src="foto6b.jpg" alt="Foto 6B"></div>
+                    <div class="photo-item"><img src="foto6c.jpg" alt="Foto 6C"></div>
+                </div>
+                <div class="text-box sequence-box">
+                    <p>Este es el último texto antes del final. Aquí puedes resumir todo lo que has mostrado en las fotos anteriores.</p>
+                </div>
+                <button class="next-btn" onclick="alert('¡Fin de las secuencias! Ahora vendría la pregunta final.')">
+                    Ver el Final <i class="fas fa-heart"></i>
+                </button>
             </div>
-            <button class="next-btn" onclick="alert('¡Fin de las secuencias! Ahora vendría la pregunta final.')">
-                Ver el Final <i class="fas fa-heart"></i>
-            </button>
         </div>
 
     </div>
@@ -249,28 +321,35 @@
 
         // Función maestra para cambiar entre cualquier pantalla
         function changeScreen(nextScreenId) {
-            // 1. Encontrar la pantalla actual activa
             const currentScreen = document.querySelector('.screen.active');
-            // 2. Encontrar la próxima pantalla
             const nextScreen = document.getElementById(nextScreenId);
 
             if (currentScreen) {
-                // Desvanecer la actual
                 currentScreen.style.opacity = '0';
-                // Esperar a que termine el desvanecimiento para ocultarla y mostrar la nueva
                 setTimeout(() => {
                     currentScreen.classList.remove('active');
                     nextScreen.classList.add('active');
-                    // Pequeña pausa para que el navegador registre el cambio a 'flex' antes de la opacidad
                     setTimeout(() => {
                         nextScreen.style.opacity = '1';
                     }, 50);
-                }, 600); // Tiempo de espera igual a la transición CSS (0.6s)
+                }, 600);
             } else {
-                // Si no hay pantalla activa (es la primera vez)
                 nextScreen.classList.add('active');
                 setTimeout(() => { nextScreen.style.opacity = '1'; }, 50);
             }
+        }
+
+        // --- FUNCIÓN PARA ABRIR LA CARTA Y MOSTRAR EL CONTENIDO ---
+        function openLetter(sequenceId) {
+            const sequenceScreen = document.getElementById(sequenceId);
+            const letter = sequenceScreen.querySelector('.closed-letter');
+            const content = sequenceScreen.querySelector('.sequence-content');
+
+            letter.style.display = 'none'; // Oculta la carta
+            content.style.display = 'flex'; // Muestra el contenido
+            setTimeout(() => {
+                content.style.opacity = '1'; // Lo hace visible suavemente
+            }, 50);
         }
 
         /* --- Fondo de Corazones (Código optimizado) --- */
