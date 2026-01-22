@@ -47,7 +47,7 @@
         #main-content { padding-bottom: 30px; }
         #main-content h1 { font-size: 3rem; color: #c9184a; margin-bottom: 20px; text-align: center; }
 
-        /* Estilos de las Cajas de Texto (Carta y Secuencias) */
+        /* Estilos de las Cajas de Texto */
         .text-box {
             background: rgba(255, 255, 255, 0.95);
             padding: 25px; border-radius: 20px;
@@ -70,8 +70,7 @@
         }
         
         .photo-item {
-            width: 32%; /* 3 fotos por fila */
-            height: 200px; 
+            width: 32%; height: 200px; 
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
@@ -80,8 +79,7 @@
         
         .photo-item img {
             width: 100%; height: 100%;
-            object-fit: cover; 
-            transition: transform 0.3s;
+            object-fit: cover; transition: transform 0.3s;
         }
 
         /* --- Botones --- */
@@ -107,45 +105,51 @@
             border-radius: 60px;
             box-shadow: 0 10px 30px rgba(255, 0, 85, 0.5);
             animation: heartbeat 1.5s infinite;
+            z-index: 100; /* Asegura que esté por encima */
         }
 
         /* --- Estilos para la Carta Cerrada --- */
         .closed-letter {
-            cursor: pointer;
-            text-align: center;
-            padding: 40px;
-            background: #800f2f;
-            color: white;
-            border-radius: 15px;
+            cursor: pointer; text-align: center; padding: 40px;
+            background: #800f2f; color: white; border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             animation: float 3s ease-in-out infinite;
-            margin-bottom: 30px;
-            width: 100%; max-width: 400px;
+            margin-bottom: 30px; width: 100%; max-width: 400px;
         }
         .closed-letter i { font-size: 4rem; display: block; margin-bottom: 15px; }
         .closed-letter p { font-size: 1.2rem; font-weight: bold; }
         
         .sequence-content {
-            display: none; /* Oculto inicialmente */
-            opacity: 0;
+            display: none; opacity: 0;
             transition: opacity 0.8s ease-in-out;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
+            flex-direction: column; align-items: center; width: 100%;
         }
 
         /* --- PANTALLA FINAL --- */
-        #final-screen { text-align: center; }
-        #final-message { 
+        #final-screen { text-align: center; justify-content: flex-start; padding-top: 50px; }
+        
+        /* Contenedor del texto final con scroll si es muy largo en celular */
+        #final-message-container { 
             display: none; 
-            font-size: 1.5rem; 
-            color: #590d22; 
-            margin-top: 30px; 
-            font-weight: bold;
-            background: rgba(255,255,255,0.8);
-            padding: 20px;
-            border-radius: 15px;
+            width: 100%; max-width: 700px;
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #ff4d6d;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 60vh;
+            overflow-y: auto; /* Permite deslizar si el texto es muy largo */
         }
+
+        .final-text-paragraph {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #590d22;
+        }
+        
+        .highlight { font-weight: bold; color: #c9184a; }
 
         /* --- Responsive --- */
         @media screen and (max-width: 600px) {
@@ -155,11 +159,9 @@
             .heart-btn { width: 80%; justify-content: center; }
             .next-btn { width: 100%; justify-content: center; padding: 12px 30px; }
             .final-btn { font-size: 1.3rem; padding: 15px 30px; width: 90%; }
-            
-            /* Cambios importantes para fotos en celular */
             .photo-gallery { flex-direction: column; align-items: center; }
             .photo-item { width: 100%; max-width: 350px; height: auto; max-height: 300px; margin-bottom: 10px; }
-            .photo-item img { height: auto; }
+            #final-message-container { padding: 20px; max-height: 55vh; }
         }
 
         @keyframes pulse {
@@ -184,14 +186,17 @@
         .confetti {
             position: fixed; width: 10px; height: 10px;
             background-color: #f00; animation: fall linear forwards;
-            z-index: 100;
+            z-index: 100; pointer-events: none;
         }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
     </style>
 </head>
 <body>
     <canvas id="heart-canvas"></canvas>
+    
     <audio id="bg-music" loop><source src="cancion.mp3" type="audio/mpeg"></audio>
+    
+    <audio id="final-music"><source src="cancion_especial.mp3" type="audio/mpeg"></audio>
 
     <div class="container">
         
@@ -332,8 +337,8 @@
                 <h2 class="sequence-title">Una Promesa</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo16.jpg" alt="Foto 6A"></div>
-                    <div class="photo-item"><img src="foto6b.jpg" alt="Foto 6B"></div>
-                    <div class="photo-item"><img src="foto6c.jpg" alt="Foto 6C"></div>
+                    <div class="photo-item"><img src="fotorecuerdo17.jpg" alt="Foto 6B"></div>
+                    <div class="photo-item"><img src="fotorecuerdo18.jpg" alt="Foto 6C"></div>
                 </div>
                 <div class="text-box sequence-box">
                     <p>He creado esto para recordarte no solo cuánto te he querido y amado, sino cuánto quiero luchar por ti ahora.</p>
@@ -348,13 +353,32 @@
         <div id="final-screen" class="screen">
             <h1 style="color: #800f2f; margin-bottom: 30px;">Solo queda una cosa por decir...</h1>
             
-            <button class="heart-btn final-btn" onclick="triggerFinalSurprise()">
+            <button id="final-btn" class="heart-btn final-btn" onclick="triggerFinalSurprise()">
                 TE AMO 3 MILLONES
             </button>
 
-            <div id="final-message">
-                <p>❤️ Eres el amor de mi vida ❤️</p>
-                <p>Gracias por existir.</p>
+            <div id="final-message-container">
+                <p class="final-text-paragraph">
+                    Hola mi amor. Quiero que recuerdes ese anillo que te regalé un día y quiero que recuerdes la canción que te hice escuchar en tu oído cuando te tenía los ojos tapados y estabas nerviosa porque no sabías qué estaba pasando. Para mí, regalarte ese anillo era para demostrarte todo lo que te amo y que supieras que nunca me quería alejar de tu vida.
+                </p>
+                <p class="final-text-paragraph">
+                    Siempre voy a querer acompañarte en tus momentos malos, tus momentos difíciles y tus momentos de felicidad; acompañarte en el camino a tus sueños y poder estar ahí para abrazarte muy fuerte y besarte cuando los cumplas. Tener esa casa de la que muchas veces hablábamos, tener a esa niña o a ese niño que soñábamos.
+                </p>
+                <p class="final-text-paragraph">
+                    Sé que no pasamos todo el tiempo necesario como pareja, ni hablamos todo lo que nos gustaría, pero yo, que te amo con toda mi alma, sé que este proceso no es un obstáculo; lo veo como una inversión para nuestro futuro. Estás sacrificando mucho y créeme que cuando llegue el día en que completes tu sueño, vas a mirar atrás y vas a decir que no fue terrible, que los años pasaron rápido. ¿Y quién va a estar ahí para ese momento? Yo estaré ahí para felicitarte por tu logro.
+                </p>
+                <p class="final-text-paragraph">
+                    No quiero que nuestra historia acabe aquí. Por lo que me has dicho, que me amas tanto como dices, entonces para mí nuestro amor es mucho más fuerte para poder seguir adelante tomados de la mano. Quiero que luchemos por nosotros. Yo haré lo posible por ir a verte más seguido a Santiago, pondré todo de mí para que esto funcione de verdad y podamos algún día casarnos como dijimos siempre.
+                </p>
+                <p class="final-text-paragraph">
+                    No quiero soltar tu manito y que nuestros caminos se separen por una distancia que es mínima comparada a otras relaciones que tienen países de por medio. Yo sé que si tú realmente me amas como dices, vas a querer luchar por nosotros y me vas a dejar ser esa persona que te alegre los días con un "te amo", un "buenos días mi amor", o un "yo estaré para ti en lo que necesites".
+                </p>
+                <p class="final-text-paragraph">
+                    Solo me queda decirte que te amo y que no me rindo fácil; cuando quiero que algo resulte, lucho por ello y no me rindo. Ahora, si tú te llegas a rendir y te vas para siempre, me tocará desaparecer de tu vida, pero antes no. 
+                </p>
+                <p class="final-text-paragraph" style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-top: 30px;">
+                    TE AMO 3 MILLONES, AMORCITO DE MI VIDA.
+                </p>
             </div>
         </div>
 
@@ -363,15 +387,13 @@
     <script>
         /* --- Lógica de Navegación entre Pantallas --- */
         
-        // Función inicial (música y primera transición)
         function startExperience() {
             const music = document.getElementById('bg-music');
-            music.play().catch(e => console.log("Audio play failed (navegador bloqueó)"));
+            music.play().catch(e => console.log("Audio play failed"));
             music.volume = 0.5;
             changeScreen('main-content');
         }
 
-        // Función maestra para cambiar entre cualquier pantalla
         function changeScreen(nextScreenId) {
             const currentScreen = document.querySelector('.screen.active');
             const nextScreen = document.getElementById(nextScreenId);
@@ -391,27 +413,49 @@
             }
         }
 
-        // --- FUNCIÓN PARA ABRIR LA CARTA Y MOSTRAR EL CONTENIDO ---
         function openLetter(sequenceId) {
             const sequenceScreen = document.getElementById(sequenceId);
             const letter = sequenceScreen.querySelector('.closed-letter');
             const content = sequenceScreen.querySelector('.sequence-content');
 
-            letter.style.display = 'none'; // Oculta la carta
-            content.style.display = 'flex'; // Muestra el contenido
+            letter.style.display = 'none'; 
+            content.style.display = 'flex'; 
             setTimeout(() => {
-                content.style.opacity = '1'; // Lo hace visible suavemente
+                content.style.opacity = '1'; 
             }, 50);
         }
 
-        // --- SORPRESA FINAL ---
+        /* --- SORPRESA FINAL + CAMBIO DE MÚSICA --- */
         function triggerFinalSurprise() {
-            // Mostrar mensaje oculto
-            const msg = document.getElementById('final-message');
-            msg.style.display = 'block';
+            // 1. Detener música de fondo normal
+            const bgMusic = document.getElementById('bg-music');
             
-            // Lluvia de confeti
-            for (let i = 0; i < 100; i++) {
+            // Efecto de "fade out" (bajar volumen suavemente antes de parar)
+            let vol = 0.5;
+            const fadeAudio = setInterval(function () {
+                if (vol > 0.05) {
+                    vol -= 0.05;
+                    bgMusic.volume = vol;
+                } else {
+                    clearInterval(fadeAudio);
+                    bgMusic.pause(); // Detener completamente
+                    
+                    // 2. Reproducir canción especial
+                    const finalMusic = document.getElementById('final-music');
+                    finalMusic.volume = 1.0; // Volumen al máximo para la canción especial
+                    finalMusic.play().catch(e => console.log("Error al reproducir canción final"));
+                }
+            }, 100); // Reduce volumen cada 100ms
+
+            // 3. Ocultar el botón para que se lea el texto
+            document.getElementById('final-btn').style.display = 'none';
+
+            // 4. Mostrar mensaje largo
+            const msgContainer = document.getElementById('final-message-container');
+            msgContainer.style.display = 'block';
+            
+            // 5. Lluvia de confeti
+            for (let i = 0; i < 150; i++) {
                 createConfetti();
             }
         }
@@ -423,11 +467,10 @@
             confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
             confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
             document.body.appendChild(confetti);
-            
             setTimeout(() => { confetti.remove(); }, 5000);
         }
 
-        /* --- Fondo de Corazones (Código optimizado) --- */
+        /* --- Fondo de Corazones --- */
         const canvas = document.getElementById('heart-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, hearts = [];
