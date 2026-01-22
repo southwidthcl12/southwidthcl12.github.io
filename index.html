@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Para ti</title>
+    <title>Para ti, mi niña</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -58,8 +58,8 @@
         }
         .text-box p { margin-bottom: 15px; }
 
-        /* --- NUEVOS ESTILOS PARA LAS SECUENCIAS DE FOTOS --- */
-        .sequence-title { color: #c9184a; margin-bottom: 20px; font-size: 2rem; }
+        /* --- ESTILOS PARA LAS SECUENCIAS DE FOTOS --- */
+        .sequence-title { color: #c9184a; margin-bottom: 20px; font-size: 2rem; text-align: center; }
         
         .photo-gallery {
             display: flex;
@@ -71,7 +71,7 @@
         
         .photo-item {
             width: 32%; /* 3 fotos por fila */
-            height: 200px; /* Altura fija para que se vean parejas */
+            height: 200px; 
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
@@ -80,10 +80,10 @@
         
         .photo-item img {
             width: 100%; height: 100%;
-            object-fit: cover; /* La imagen se recorta para llenar el espacio sin deformarse */
+            object-fit: cover; 
             transition: transform 0.3s;
         }
-        
+
         /* --- Botones --- */
         .heart-btn {
             background-color: #ff4d6d; color: white; border: none; padding: 18px 40px;
@@ -99,6 +99,16 @@
         }
         .next-btn:hover { background-color: #590d22; transform: translateY(-2px); }
 
+        /* Estilo especial para el botón final */
+        .final-btn {
+            background: linear-gradient(45deg, #ff0055, #ff5e78);
+            font-size: 1.8rem;
+            padding: 20px 50px;
+            border-radius: 60px;
+            box-shadow: 0 10px 30px rgba(255, 0, 85, 0.5);
+            animation: heartbeat 1.5s infinite;
+        }
+
         /* --- Estilos para la Carta Cerrada --- */
         .closed-letter {
             cursor: pointer;
@@ -110,16 +120,11 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             animation: float 3s ease-in-out infinite;
             margin-bottom: 30px;
+            width: 100%; max-width: 400px;
         }
-        .closed-letter i {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 15px;
-        }
-        .closed-letter p {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
+        .closed-letter i { font-size: 4rem; display: block; margin-bottom: 15px; }
+        .closed-letter p { font-size: 1.2rem; font-weight: bold; }
+        
         .sequence-content {
             display: none; /* Oculto inicialmente */
             opacity: 0;
@@ -129,6 +134,19 @@
             width: 100%;
         }
 
+        /* --- PANTALLA FINAL --- */
+        #final-screen { text-align: center; }
+        #final-message { 
+            display: none; 
+            font-size: 1.5rem; 
+            color: #590d22; 
+            margin-top: 30px; 
+            font-weight: bold;
+            background: rgba(255,255,255,0.8);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
         /* --- Responsive --- */
         @media screen and (max-width: 600px) {
             .intro-content h2 { font-size: 1.8rem; }
@@ -136,10 +154,12 @@
             .text-box { padding: 15px; font-size: 1rem; }
             .heart-btn { width: 80%; justify-content: center; }
             .next-btn { width: 100%; justify-content: center; padding: 12px 30px; }
+            .final-btn { font-size: 1.3rem; padding: 15px 30px; width: 90%; }
             
             /* Cambios importantes para fotos en celular */
             .photo-gallery { flex-direction: column; align-items: center; }
-            .photo-item { width: 100%; max-width: 350px; height: auto; max-height: 300px; }
+            .photo-item { width: 100%; max-width: 350px; height: auto; max-height: 300px; margin-bottom: 10px; }
+            .photo-item img { height: auto; }
         }
 
         @keyframes pulse {
@@ -147,12 +167,26 @@
             70% { box-shadow: 0 0 0 20px rgba(255, 77, 109, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
         }
-
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.1); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+            60% { transform: scale(1); }
+        }
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
+        
+        /* Confeti */
+        .confetti {
+            position: fixed; width: 10px; height: 10px;
+            background-color: #f00; animation: fall linear forwards;
+            z-index: 100;
+        }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
     </style>
 </head>
 <body>
@@ -162,7 +196,7 @@
     <div class="container">
         
         <div id="intro-screen" class="screen active">
-            <div class="intro-content"><h2>Tengo algo que decirte...</h2></div>
+            <div class="intro-content"><h2>Tengo algo muy importante que decirte...</h2></div>
             <button class="heart-btn" onclick="startExperience()">
                 <i class="fas fa-heart"></i> Abrir Sorpresa
             </button>
@@ -171,17 +205,17 @@
         <div id="main-content" class="screen">
             <h1>Nuestra Historia</h1>
             <div class="text-box">
-                <p>Quiero comenzar recordando esos días en los que pasabas frente a mí, súper tímida... Te miraba y escapabas con tus amigas. Recuerdo también cuando mandaste a tus 2 o 3 amigas distintas a pedirme el Instagram y el número ¡y no sé qué más! Jajaja.</p>
+                <p>Quiero comenzar recordando esos días en los que pasabas frente a mí, súper tímida... Te miraba y escapabas con tus amigas. Recuerdo también cuando mandaste a tus amigas a pedirme el Instagram y el número. ¡Qué tiempos!</p>
                 <p>Aún recuerdo ese "Hola". Ese simple saludo que fue el comienzo de la etapa más hermosa de toda mi vida, una etapa que espero con el alma que aún no se acabe para siempre.</p>
-                <p>Recuerdo el primer día que escuché tu voz. Literalmente fue como si hubiera tocado el cielo; tienes una voz tan tierna y hermosa. También recuerdo a ese personaje que yo inventaba para ti en esas llamadas laaaargas que hacíamos todas las noches. No me acuerdo del nombre del personaje, pero sí sé que ponía una voz rara solo para hacerte reír demasiado. No sabes la inmensa felicidad que me daba el tan solo escucharte reír.</p>
+                <p>Recuerdo el primer día que escuché tu voz. Literalmente fue como si hubiera tocado el cielo; tienes una voz tan tierna y hermosa. También recuerdo a ese personaje que yo inventaba para ti en esas llamadas largas que hacíamos todas las noches para hacerte reír. No sabes la inmensa felicidad que me daba el tan solo escucharte.</p>
                 <p>Y luego, cuando empezamos a mandarnos fotos... Cuando por fin pudiste mandarme una fotito de tu carita, realmente fue como ver a un ángel.</p>
-                <p>Avancemos un poco más, hasta cuando nos vimos por primera vez. Ese fue uno de los días más felices de mi vida. Ni te imaginas lo nervioso que estaba... ¡Estaba tan nervioso que hasta se me olvidó echarme desodorante! Jajaja, no me di cuenta hasta que llegué a casa. Pero lo más bonito de ese día, aparte de poder darte el primer abrazo, fue nuestro primer beso. En ese beso sentí como si hubiera tocado las nubes y, desde ese instante, supe que te ibas a volver la persona más importante de mi vida.</p>
-                <p>Quiero recordar momentos muy especiales, como cuando te vi graduarte. Pude estar contigo ese día y celebrar nuestro logro de completar la media. Lo sentí como si fuera un logro mío también, porque todo lo que consigas, para mí será igual de importante que si lo hubiera hecho yo.</p>
-                <p>El tiempo pasó y llegó otra etapa hermosa: vivir juntos y solitos. Aún recuerdo cuando terminaba mis clases y lo único que quería era correr a la casa, porque sabía que estarías allá esperándome con un abrazo gigante y unos besitos muy ricos. Me encantó poder vivir ese tiempo contigo y compartir cada momento en nuestro nido de amor.</p>
-                <p>Quiero que sepas que cuando me comentaste que querías volver a tu sueño de niña de ser carabinera, supe de inmediato que lo lograrías, que entrarías a la escuela en busca de ese sueño.</p>
-                <p>Aún recuerdo el día que me tocó soltarte de la mano, tener que dejarte ir a cumplir tus metas. Y sí, me costó mucho porque tenía miedo de perderte, pero al mismo tiempo sentía mucha felicidad porque sabía que estabas haciendo lo que más te gusta. Semanas después, sin saber nada de ti, recibí una llamada inesperada por la mañana... era tu mami para contarme que por fin podía hablar contigo.</p>
-                <p>Estaba nervioso, no sabía si aún me extrañabas o si me seguías amando como siempre. Pero cuando escuché tu voz llena de felicidad al oírme, estando yo con el 1% de energía, fue como si me hubieran conectado un cable de corriente directo al cuerpo. Me recargó de golpe al 1,000,000% de energía y felicidad, solo de escucharte y saber que esa niña que tanto amo aún me seguía amando como yo a ella.</p>
-                <p>Así seguí con toda esa batería hasta hace unos días, cuando recibí la peor noticia, esa que hizo que mi 2026 se tornara gris por completo...</p>
+                <p>Avancemos un poco más, hasta cuando nos vimos por primera vez. Ese fue uno de los días más felices de mi vida. Ni te imaginas lo nervioso que estaba... ¡Estaba tan nervioso que hasta se me olvidó echarme desodorante! Jajaja. Pero lo más bonito de ese día, aparte de poder darte el primer abrazo, fue nuestro primer beso. En ese beso sentí como si hubiera tocado las nubes y supe que te ibas a volver la persona más importante de mi vida.</p>
+                <p>Quiero recordar momentos muy especiales, como cuando te vi graduarte. Pude estar contigo ese día y celebrar nuestro logro de completar la media. Lo sentí como si fuera un logro mío también.</p>
+                <p>El tiempo pasó y llegó otra etapa hermosa: vivir juntos y solitos. Aún recuerdo cuando terminaba mis clases y lo único que quería era correr a la casa, porque sabía que estarías allá esperándome con un abrazo gigante. Me encantó poder vivir ese tiempo contigo en nuestro nido de amor.</p>
+                <p>Quiero que sepas que cuando me comentaste que querías volver a tu sueño de niña de ser carabinera, supe de inmediato que lo lograrías.</p>
+                <p>Aún recuerdo el día que me tocó soltarte de la mano, tener que dejarte ir a cumplir tus metas. Me costó mucho porque tenía miedo de perderte, pero sentía mucha felicidad porque sabía que estabas haciendo lo que más te gusta. Semanas después, recibí una llamada inesperada: era tu mami para contarme que por fin podía hablar contigo.</p>
+                <p>Estaba nervioso, no sabía si aún me extrañabas. Pero cuando escuché tu voz llena de felicidad al oírme, estando yo con el 1% de energía, fue como si me hubieran conectado un cable de corriente. Me recargó de golpe al 1,000,000% de energía y felicidad, solo de saber que esa niña que tanto amo aún me seguía amando.</p>
+                <p>Así seguí con toda esa batería hasta hace unos días, cuando recibí esa noticia difícil...</p>
                 <p>Por eso, ahora necesito que aprietes el botoncito de "Avanzar" para que veas lo que tengo para decirte.</p>
             </div>
             <button class="next-btn" onclick="changeScreen('seq-1')">
@@ -192,18 +226,18 @@
         <div id="seq-1" class="screen">
             <div class="closed-letter" onclick="openLetter('seq-1')">
                 <i class="fas fa-envelope"></i>
-                <p>Toca para abrir el recuerdo</p>
+                <p>Toca para abrir el recuerdo 1</p>
             </div>
             <div class="sequence-content">
-                <h2 class="sequence-title">Momento Especial 1</h2>
+                <h2 class="sequence-title">El Comienzo</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo1.jpg" alt="Foto 1A"></div>
                     <div class="photo-item"><img src="fotorecuerdo2.jpg" alt="Foto 1B"></div>
                     <div class="photo-item"><img src="fotorecuerdo3.jpg" alt="Foto 1C"></div>
                 </div>
                 <div class="text-box sequence-box">
-                    <p>Aquí escribe el texto largo para el primer grupo de fotos. Describe qué sentías en ese momento, por qué elegiste estas fotos y qué significan para ti.</p>
-                    <p>Puedes añadir más párrafos si lo necesitas.</p>
+                    <p>Todavía recuerdo esos días en que pasabas frente a mí, súper tímida, y te escapabas corriendo con tus amigas en cuanto nuestras miradas se cruzaban.</p>
+                    <p>Desde ese instante, aunque no nos dijéramos nada, yo ya sabía que quería descubrir quién eras.</p>
                 </div>
                 <button class="next-btn" onclick="changeScreen('seq-2')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
@@ -212,17 +246,18 @@
         <div id="seq-2" class="screen">
             <div class="closed-letter" onclick="openLetter('seq-2')">
                 <i class="fas fa-envelope"></i>
-                <p>Toca para abrir el recuerdo</p>
+                <p>Toca para abrir el recuerdo 2</p>
             </div>
             <div class="sequence-content">
-                <h2 class="sequence-title">Momento Especial 2</h2>
+                <h2 class="sequence-title">Nosotros</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo4.jpg" alt="Foto 2A"></div>
                     <div class="photo-item"><img src="fotorecuerdo5.jpg" alt="Foto 2B"></div>
                     <div class="photo-item"><img src="fotorecuerdo6.jpg" alt="Foto 2C"></div>
                 </div>
                 <div class="text-box sequence-box">
-                    <p>Aquí va el texto para la segunda secuencia de fotos. Sigue contando la historia a través de las imágenes.</p>
+                    <p>Romper esa barrera de timidez fue la mejor decisión de mi vida. Pasar de las miradas lejanas a tenerte cerca me enseñó lo que es la felicidad.</p>
+                    <p>Aquí es donde dejamos de ser dos extraños y empezamos a ser "nosotros".</p>
                 </div>
                 <button class="next-btn" onclick="changeScreen('seq-3')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
@@ -231,17 +266,18 @@
         <div id="seq-3" class="screen">
             <div class="closed-letter" onclick="openLetter('seq-3')">
                 <i class="fas fa-envelope"></i>
-                <p>Toca para abrir el recuerdo</p>
+                <p>Toca para abrir el recuerdo 3</p>
             </div>
             <div class="sequence-content">
-                <h2 class="sequence-title">Momento Especial 3</h2>
+                <h2 class="sequence-title">Tesoros</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo7.jpg" alt="Foto 3A"></div>
                     <div class="photo-item"><img src="fotorecuerdo8.jpg" alt="Foto 3B"></div>
                     <div class="photo-item"><img src="fotorecuerdo9.jpg" alt="Foto 3C"></div>
                 </div>
                 <div class="text-box sequence-box">
-                    <p>Texto para la tercera secuencia.</p>
+                    <p>Hemos compartido risas, aventuras y momentos que guardo como tesoros.</p>
+                    <p>Esta foto me recuerda lo bien que lo pasamos cuando simplemente disfrutamos de nuestra compañía, sin preocupaciones, solo tú y yo contra el mundo.</p>
                 </div>
                 <button class="next-btn" onclick="changeScreen('seq-4')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
@@ -250,17 +286,18 @@
         <div id="seq-4" class="screen">
             <div class="closed-letter" onclick="openLetter('seq-4')">
                 <i class="fas fa-envelope"></i>
-                <p>Toca para abrir el recuerdo</p>
+                <p>Toca para abrir el recuerdo 4</p>
             </div>
             <div class="sequence-content">
-                <h2 class="sequence-title">Momento Especial 4</h2>
+                <h2 class="sequence-title">Tus Sueños</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo10.jpg" alt="Foto 4A"></div>
                     <div class="photo-item"><img src="fotorecuerdo11.jpg" alt="Foto 4B"></div>
                     <div class="photo-item"><img src="fotorecuerdo12.jpg" alt="Foto 4C"></div>
                 </div>
                 <div class="text-box sequence-box">
-                    <p>Texto para la cuarta secuencia.</p>
+                    <p>Aquí ya estabas dentro de tu escuela, cumpliendo "TUS SUEÑOS". A pesar de poder hablar poco y vernos poco, era el niño más feliz del mundo porque me dejabas acompañarte a tu lado, dándote apoyo y amor. Aún te podía decir "mi amor, mi vida, mi niña".</p>
+                    <p>Recibir esas fotos tuyas, donde me demostrabas que a pesar de todo estabas bien con tus amigas y feliz cumpliendo tus sueños, lo era todo para mí.</p>
                 </div>
                 <button class="next-btn" onclick="changeScreen('seq-5')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
@@ -269,17 +306,18 @@
         <div id="seq-5" class="screen">
             <div class="closed-letter" onclick="openLetter('seq-5')">
                 <i class="fas fa-envelope"></i>
-                <p>Toca para abrir el recuerdo</p>
+                <p>Toca para abrir el recuerdo 5</p>
             </div>
             <div class="sequence-content">
-                <h2 class="sequence-title">Momento Especial 5</h2>
+                <h2 class="sequence-title">Esas Llamadas</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo13.jpg" alt="Foto 5A"></div>
                     <div class="photo-item"><img src="fotorecuerdo14.jpg" alt="Foto 5B"></div>
                     <div class="photo-item"><img src="fotorecuerdo15.jpg" alt="Foto 5C"></div>
                 </div>
                 <div class="text-box sequence-box">
-                    <p>Texto para la quinta secuencia.</p>
+                    <p>Me encantaba que me llamaras y me contaras tu día: cómo te fue, qué hiciste... Esperaba con ansias que fueran las 8 de la tarde para recibir esa llamadita.</p>
+                    <p>Aunque durara 1 o 5 minutos, eran los minutos que hacían que mi día terminara más feliz que nunca. Me iba a acostar sabiendo y recibiendo ese amor tuyo que sabes transmitir. Dormía prácticamente sonriendo. Espero poder volver a vivir esas llamadas que cambiaban mi día por completo.</p>
                 </div>
                 <button class="next-btn" onclick="changeScreen('seq-6')">Siguiente <i class="fas fa-arrow-right"></i></button>
             </div>
@@ -288,21 +326,35 @@
          <div id="seq-6" class="screen">
             <div class="closed-letter" onclick="openLetter('seq-6')">
                 <i class="fas fa-envelope"></i>
-                <p>Toca para abrir el recuerdo</p>
+                <p>Toca para abrir el último recuerdo</p>
             </div>
             <div class="sequence-content">
-                <h2 class="sequence-title">Y por todo esto...</h2>
+                <h2 class="sequence-title">Una Promesa</h2>
                 <div class="photo-gallery">
                     <div class="photo-item"><img src="fotorecuerdo16.jpg" alt="Foto 6A"></div>
                     <div class="photo-item"><img src="foto6b.jpg" alt="Foto 6B"></div>
                     <div class="photo-item"><img src="foto6c.jpg" alt="Foto 6C"></div>
                 </div>
                 <div class="text-box sequence-box">
-                    <p>Este es el último texto antes del final. Aquí puedes resumir todo lo que has mostrado en las fotos anteriores.</p>
+                    <p>He creado esto para recordarte no solo cuánto te he querido y amado, sino cuánto quiero luchar por ti ahora.</p>
+                    <p>No quiero que nuestra historia se quede en el pasado; quiero escribir las siguientes páginas contigo, con más madurez y el mismo amor de siempre. Y ahora, déjame decirte lo último que tengo para ti en la siguiente página.</p>
                 </div>
-                <button class="next-btn" onclick="alert('¡Fin de las secuencias! Ahora vendría la pregunta final.')">
-                    Ver el Final <i class="fas fa-heart"></i>
+                <button class="next-btn" onclick="changeScreen('final-screen')">
+                    Ver Sorpresa Final <i class="fas fa-heart"></i>
                 </button>
+            </div>
+        </div>
+
+        <div id="final-screen" class="screen">
+            <h1 style="color: #800f2f; margin-bottom: 30px;">Solo queda una cosa por decir...</h1>
+            
+            <button class="heart-btn final-btn" onclick="triggerFinalSurprise()">
+                TE AMO 3 MILLONES
+            </button>
+
+            <div id="final-message">
+                <p>❤️ Eres el amor de mi vida ❤️</p>
+                <p>Gracias por existir.</p>
             </div>
         </div>
 
@@ -352,12 +404,36 @@
             }, 50);
         }
 
+        // --- SORPRESA FINAL ---
+        function triggerFinalSurprise() {
+            // Mostrar mensaje oculto
+            const msg = document.getElementById('final-message');
+            msg.style.display = 'block';
+            
+            // Lluvia de confeti
+            for (let i = 0; i < 100; i++) {
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => { confetti.remove(); }, 5000);
+        }
+
         /* --- Fondo de Corazones (Código optimizado) --- */
         const canvas = document.getElementById('heart-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, hearts = [];
         function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
         window.addEventListener('resize', resize); resize();
+        
         class Heart {
             constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.size = Math.random() * 15 + 5; this.speedY = Math.random() * 1 + 0.5; this.color = `rgba(255, ${Math.floor(Math.random() * 50 + 200)}, ${Math.floor(Math.random() * 50 + 100)}, ${Math.random() * 0.5 + 0.2})`; }
             update() { this.y -= this.speedY; if (this.y < -50) { this.y = height + 50; this.x = Math.random() * width; } }
