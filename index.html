@@ -18,7 +18,7 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center; /* Centrado vertical */
+            align-items: center;
             color: #4a4a4a;
             position: relative;
             overflow-x: hidden;
@@ -42,7 +42,6 @@
             width: 100%;
             max-width: 800px;
             padding: 20px;
-            /* Eliminamos min-height 100vh aquí para permitir scroll natural si la carta es larga */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -56,7 +55,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 80vh; /* Ocupa casi toda la pantalla inicial */
+            height: 80vh;
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
@@ -65,6 +64,7 @@
             color: #800f2f;
             margin-bottom: 2rem;
             text-align: center;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
         }
 
         .heart-btn {
@@ -84,14 +84,18 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Contenido de la Carta (NUEVO DISEÑO) --- */
+        .heart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* --- Contenido de la Carta --- */
         #main-content {
             display: none;
             opacity: 0;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            padding-bottom: 50px; /* Espacio al final */
+            padding-bottom: 50px;
         }
 
         #main-content h1 {
@@ -101,28 +105,27 @@
             text-align: center;
         }
 
-        /* Caja de la carta para que se lea bien */
         .letter-box {
-            background: rgba(255, 255, 255, 0.85); /* Blanco semitransparente */
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(128, 15, 47, 0.1);
             width: 100%;
             max-width: 650px;
-            text-align: left; /* Texto alineado a la izquierda para mejor lectura */
-            line-height: 1.8; /* Espacio entre líneas */
-            font-size: 1.15rem;
+            text-align: left;
+            line-height: 1.8;
+            font-size: 1.1rem;
             margin-bottom: 30px;
             border: 1px solid #ffccd5;
         }
 
         .letter-box p {
-            margin-bottom: 15px;
+            margin-bottom: 20px; /* Espacio entre párrafos */
         }
 
         /* Botón Avanzar */
         .next-btn {
-            background-color: #800f2f; /* Un rojo más oscuro y serio */
+            background-color: #800f2f;
             color: white;
             border: none;
             padding: 15px 50px;
@@ -141,7 +144,7 @@
             transform: translateY(-2px);
         }
 
-        /* --- Estilos responsive --- */
+        /* --- Responsive --- */
         @media screen and (max-width: 480px) {
             .intro-content h2 { font-size: 1.8rem; }
             #main-content h1 { font-size: 2.2rem; }
@@ -182,15 +185,29 @@
             <h1>Nuestra Historia</h1>
             
             <div class="letter-box">
-                <p><strong>Hola mi amor,</strong></p>
+                <p>Quiero comenzar recordando esos días en los que pasabas frente a mí, súper tímida... Te miraba y escapabas con tus amigas. Recuerdo también cuando mandaste a tus 2 o 3 amigas distintas a pedirme el Instagram y el número ¡y no sé qué más! Jajaja.</p>
                 
-                <p>He estado pensando mucho en todo este tiempo y quería escribirte esto porque a veces las palabras habladas se las lleva el viento, pero lo que se escribe queda.</p>
-                
-                <p>Aquí puedes escribir el primer párrafo contando cómo te sientes...</p>
+                <p>Aún recuerdo ese "Hola". Ese simple saludo que fue el comienzo de la etapa más hermosa de toda mi vida, una etapa que espero con el alma que aún no se acabe para siempre.</p>
 
-                <p>Aquí puedes poner otro párrafo recordando algo bonito de los dos...</p>
+                <p>Recuerdo el primer día que escuché tu voz. Literalmente fue como si hubiera tocado el cielo; tienes una voz tan tierna y hermosa. También recuerdo a ese personaje que yo inventaba para ti en esas llamadas laaaargas que hacíamos todas las noches. No me acuerdo del nombre del personaje, pero sí sé que ponía una voz rara solo para hacerte reír demasiado. No sabes la inmensa felicidad que me daba el tan solo escucharte reír.</p>
 
-                <p>Y aquí el cierre de tu carta antes de pedirle que avance.</p>
+                <p>Y luego, cuando empezamos a mandarnos fotos... Cuando por fin pudiste mandarme una fotito de tu carita, realmente fue como ver a un ángel.</p>
+
+                <p>Avancemos un poco más, hasta cuando nos vimos por primera vez. Ese fue uno de los días más felices de mi vida. Ni te imaginas lo nervioso que estaba... ¡Estaba tan nervioso que hasta se me olvidó echarme desodorante! Jajaja, no me di cuenta hasta que llegué a casa. Pero lo más bonito de ese día, aparte de poder darte el primer abrazo, fue nuestro primer beso. En ese beso sentí como si hubiera tocado las nubes y, desde ese instante, supe que te ibas a volver la persona más importante de mi vida.</p>
+
+                <p>Quiero recordar momentos muy especiales, como cuando te vi graduarte. Pude estar contigo ese día y celebrar nuestro logro de completar la media. Lo sentí como si fuera un logro mío también, porque todo lo que consigas, para mí será igual de importante que si lo hubiera hecho yo.</p>
+
+                <p>El tiempo pasó y llegó otra etapa hermosa: vivir juntos y solitos. Aún recuerdo cuando terminaba mis clases y lo único que quería era correr a la casa, porque sabía que estarías allá esperándome con un abrazo gigante y unos besitos muy ricos. Me encantó poder vivir ese tiempo contigo y compartir cada momento en nuestro nido de amor.</p>
+
+                <p>Quiero que sepas que cuando me comentaste que querías volver a tu sueño de niña de ser carabinera, supe de inmediato que lo lograrías, que entrarías a la escuela en busca de ese sueño.</p>
+
+                <p>Aún recuerdo el día que me tocó soltarte de la mano, tener que dejarte ir a cumplir tus metas. Y sí, me costó mucho porque tenía miedo de perderte, pero al mismo tiempo sentía mucha felicidad porque sabía que estabas haciendo lo que más te gusta. Semanas después, sin saber nada de ti, recibí una llamada inesperada por la mañana... era tu mami para contarme que por fin podía hablar contigo.</p>
+
+                <p>Estaba nervioso, no sabía si aún me extrañabas o si me seguías amando como siempre. Pero cuando escuché tu voz llena de felicidad al oírme, estando yo con el 1% de energía, fue como si me hubieran conectado un cable de corriente directo al cuerpo. Me recargó de golpe al 1,000,000% de energía y felicidad, solo de escucharte y saber que esa niña que tanto amo aún me seguía amando como yo a ella.</p>
+
+                <p>Así seguí con toda esa batería hasta hace unos días, cuando recibí la peor noticia, esa que hizo que mi 2026 se tornara gris por completo...</p>
+
+                <p>Por eso, ahora necesito que aprietes el botoncito de "Avanzar" para que veas lo que tengo para decirte.</p>
             </div>
 
             <button class="next-btn" onclick="nextStep()">
@@ -218,7 +235,7 @@
             setTimeout(() => {
                 intro.classList.add('hidden');
                 main.style.display = 'flex';
-                // Animación de entrada suave para la carta
+                // Animación de entrada suave
                 setTimeout(() => {
                     main.style.opacity = '1';
                 }, 50);
@@ -227,11 +244,11 @@
 
         // --- FUNCIÓN PARA EL BOTÓN AVANZAR ---
         function nextStep() {
-            // Aquí pondremos la lógica de lo que pasa después
-            alert("Aquí es donde me dirás qué quieres que pase al apretar Avanzar.");
+            // AQUÍ PONDREMOS LO QUE SIGUE
+            alert("Continuará... (Aquí programaremos el siguiente paso)");
         }
 
-        /* --- Fondo de Corazones (Mismo código anterior) --- */
+        /* --- Fondo de Corazones --- */
         const canvas = document.getElementById('heart-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, hearts = [];
